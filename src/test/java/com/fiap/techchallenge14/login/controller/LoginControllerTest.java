@@ -1,8 +1,9 @@
 package com.fiap.techchallenge14.login.controller;
 
-import com.fiap.techchallenge14.login.dto.LoginRequestDTO;
-import com.fiap.techchallenge14.login.dto.LoginResponseDTO;
-import com.fiap.techchallenge14.login.service.LoginService;
+import com.fiap.techchallenge14.application.port.in.LoginUsecase;
+import com.fiap.techchallenge14.infrastructure.controller.LoginController;
+import com.fiap.techchallenge14.domain.dto.LoginRequestDTO;
+import com.fiap.techchallenge14.domain.dto.LoginResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +19,7 @@ import static org.mockito.Mockito.*;
 class LoginControllerTest {
 
     @Mock
-    private LoginService loginService;
+    private LoginUsecase loginService;
 
     @InjectMocks
     private LoginController loginController;

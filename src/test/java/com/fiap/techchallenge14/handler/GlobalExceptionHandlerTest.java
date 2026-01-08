@@ -1,6 +1,7 @@
 package com.fiap.techchallenge14.handler;
 
-import com.fiap.techchallenge14.exception.UserException;
+import com.fiap.techchallenge14.infrastructure.exception.handler.GlobalExceptionHandler;
+import com.fiap.techchallenge14.infrastructure.exception.UserException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ProblemDetail;

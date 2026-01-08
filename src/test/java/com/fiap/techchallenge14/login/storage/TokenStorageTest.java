@@ -1,5 +1,6 @@
 package com.fiap.techchallenge14.login.storage;
 
+import com.fiap.techchallenge14.infrastructure.storage.TokenStorage;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;

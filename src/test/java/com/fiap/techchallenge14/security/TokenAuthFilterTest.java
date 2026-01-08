@@ -1,13 +1,13 @@
 package com.fiap.techchallenge14.security;
 
-import com.fiap.techchallenge14.login.storage.TokenStorage;
+import com.fiap.techchallenge14.application.port.out.TokenMemoryPort;
+import com.fiap.techchallenge14.infrastructure.security.TokenAuthFilter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -26,9 +26,12 @@ class TokenAuthFilterTest {
 
     private StringWriter responseWriter;
 
+    private TokenMemoryPort tokenMemoryPort;
+
     @BeforeEach
     void setup() throws IOException {
-        filter = new TokenAuthFilter();
+        tokenMemoryPort = mock(TokenMemoryPort.class);
+        filter = new TokenAuthFilter(tokenMemoryPort);
         request = mock(HttpServletRequest.class);
         response = mock(HttpServletResponse.class);
         chain = mock(FilterChain.class);
@@ -65,15 +68,13 @@ class TokenAuthFilterTest {
         when(request.getMethod()).thenReturn("GET");
         when(request.getHeader("Authorization")).thenReturn("invalid-token");
 
-        try (MockedStatic<TokenStorage> tokenMock = mockStatic(TokenStorage.class)) {
-            tokenMock.when(() -> TokenStorage.isTokenValid("invalid-token")).thenReturn(false);
+        when(tokenMemoryPort.isTokenValid("invalid-token")).thenReturn(false);
 
-            filter.doFilterInternal(request, response, chain);
+        filter.doFilterInternal(request, response, chain);
 
-            verify(response).setStatus(401);
-            assertEquals("{\"type\":\"/problems/unauthorized\",\"title\":\"Acesso negado\",\"status\":401,\"detail\":\"Token ausente ou inválido. Verifique o cabeçalho 'Authorization' e tente novamente.\",\"instance\":\"/v1/users\",\"properties\":null}", responseWriter.toString());
-            verify(chain, never()).doFilter(request, response);
-        }
+        verify(response).setStatus(401);
+        assertEquals("{\"type\":\"/problems/unauthorized\",\"title\":\"Acesso negado\",\"status\":401,\"detail\":\"Token ausente ou inválido. Verifique o cabeçalho 'Authorization' e tente novamente.\",\"instance\":\"/v1/users\",\"properties\":null}", responseWriter.toString());
+        verify(chain, never()).doFilter(request, response);
     }
 
     @Test
@@ -82,14 +83,12 @@ class TokenAuthFilterTest {
         when(request.getMethod()).thenReturn("GET");
         when(request.getHeader("Authorization")).thenReturn("valid-token");
 
-        try (MockedStatic<TokenStorage> tokenMock = mockStatic(TokenStorage.class)) {
-            tokenMock.when(() -> TokenStorage.isTokenValid("valid-token")).thenReturn(true);
+        when(tokenMemoryPort.isTokenValid("valid-token")).thenReturn(true);
 
-            filter.doFilterInternal(request, response, chain);
+        filter.doFilterInternal(request, response, chain);
 
-            verify(chain, times(1)).doFilter(request, response);
-            verify(response, never()).setStatus(anyInt());
-        }
+        verify(chain, times(1)).doFilter(request, response);
+        verify(response, never()).setStatus(anyInt());
     }
 
     @Test
