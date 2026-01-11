@@ -47,8 +47,7 @@ public class TokenAuthFilter extends OncePerRequestFilter {
         }
 
         String token = request.getHeader(AUTH_HEADER);
-
-       /* if (token == null || !tokenMemoryPort.isTokenValid(token)) {
+        if (token == null || !tokenMemoryPort.isTokenValid(token)) {
             ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.UNAUTHORIZED);
             problem.setTitle("Acesso negado");
             problem.setType(URI.create("/problems/unauthorized"));
@@ -58,7 +57,7 @@ public class TokenAuthFilter extends OncePerRequestFilter {
             response.setContentType("application/problem+json;charset=UTF-8");
             objectMapper.writeValue(response.getWriter(), problem);
             return;
-        }*/
+        }
 
         filterChain.doFilter(request, response);
     }

@@ -1,5 +1,7 @@
-package com.fiap.techchallenge14.handler;
+package com.fiap.techchallenge14.infrastructure.handler;
 
+import com.fiap.techchallenge14.infrastructure.exception.LoginException;
+import com.fiap.techchallenge14.infrastructure.exception.RestaurantException;
 import com.fiap.techchallenge14.infrastructure.exception.handler.GlobalExceptionHandler;
 import com.fiap.techchallenge14.infrastructure.exception.UserException;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,6 +45,26 @@ class GlobalExceptionHandlerTest {
 
         assertEquals(400, response.getStatus());
         assertEquals("Erro de usuário", response.getDetail());
+    }
+
+    @Test
+    void handleRestaurantException_ShouldReturnBadRequest() {
+        RestaurantException ex = new RestaurantException("Erro de restaurante");
+
+        ProblemDetail response = handler.handleRestaurantException(ex);
+
+        assertEquals(400, response.getStatus());
+        assertEquals("Erro de restaurante", response.getDetail());
+    }
+
+    @Test
+    void handleLoginException_ShouldReturnNotFound() {
+        LoginException ex = new LoginException("Login erro");
+
+        ProblemDetail response = handler.handleRuntime(ex);
+
+        assertEquals(404, response.getStatus());
+        assertEquals("Login erro", response.getDetail());
     }
 
     @Test
