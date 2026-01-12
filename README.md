@@ -1,4 +1,4 @@
-# 🧩 TechChallenge API - FIAP 
+# 🧩 TechChallenge API - FIAP  
 
 API RESTful desenvolvida como parte do projeto **TechChallenge da FIAP**, responsável pelo gerenciamento de usuários e autenticação (login, criação, atualização e exclusão de usuários).
 
