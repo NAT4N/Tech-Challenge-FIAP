@@ -1,6 +1,6 @@
 package com.fiap.techchallenge14.infrastructure.controller;
 
-import com.fiap.techchallenge14.application.port.in.UserUsecase;
+import com.fiap.techchallenge14.application.usecase.user.*;
 import com.fiap.techchallenge14.domain.dto.PasswordChangeRequestDTO;
 import com.fiap.techchallenge14.domain.dto.UserCreateRequestDTO;
 import com.fiap.techchallenge14.domain.dto.UserResponseDTO;
@@ -20,11 +20,15 @@ import java.util.List;
 @SecurityRequirement(name = "Authorization")
 public class UserController {
 
-    private final UserUsecase userUsecase;
+    private final CreateUserUseCase createUserUseCase;
+    private final UpdateUserUseCase updateUserUseCase;
+    private final DeleteUserUseCase deleteUserUseCase;
+    private final FindUsersUseCase findUsersUseCase;
+    private final ChangeUserPasswordUseCase changeUserPasswordUseCase;
 
     @PostMapping
     public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserCreateRequestDTO userRequestDTO) {
-        UserResponseDTO createdUser = userUsecase.save(userRequestDTO);
+        UserResponseDTO createdUser = createUserUseCase.execute(userRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
@@ -33,19 +37,19 @@ public class UserController {
             @PathVariable Long id,
             @Valid @RequestBody UserUpdateRequestDTO userRequestDTO) {
 
-        UserResponseDTO updatedUser = userUsecase.update(id, userRequestDTO);
+        UserResponseDTO updatedUser = updateUserUseCase.execute(id, userRequestDTO);
         return ResponseEntity.ok(updatedUser);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userUsecase.delete(id);
+        deleteUserUseCase.execute(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping
     public ResponseEntity<List<UserResponseDTO>> getUsers(@RequestParam(required = false) String name) {
-        List<UserResponseDTO> users = userUsecase.findUsers(name);
+        List<UserResponseDTO> users = findUsersUseCase.execute(name);
         return ResponseEntity.ok(users);
     }
 
@@ -54,7 +58,7 @@ public class UserController {
             @PathVariable Long id,
             @Valid @RequestBody PasswordChangeRequestDTO request
     ) {
-        userUsecase.changePassword(id, request.newPassword());
+        changeUserPasswordUseCase.execute(id, request.newPassword());
         return ResponseEntity.noContent().build();
     }
 }

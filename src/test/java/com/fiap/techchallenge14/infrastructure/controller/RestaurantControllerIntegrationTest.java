@@ -1,11 +1,11 @@
 package com.fiap.techchallenge14.infrastructure.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fiap.techchallenge14.application.port.in.RestaurantUsecase;
-import com.fiap.techchallenge14.application.port.out.TokenMemoryPort;
+import com.fiap.techchallenge14.application.usecase.restaurant.*;
 import com.fiap.techchallenge14.domain.dto.RestaurantCreateRequestDTO;
 import com.fiap.techchallenge14.domain.dto.RestaurantResponseDTO;
 import com.fiap.techchallenge14.domain.dto.RestaurantUpdateRequestDTO;
+import com.fiap.techchallenge14.infrastructure.security.InMemoryToken;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,8 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(RestaurantController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -32,10 +33,22 @@ class RestaurantControllerIntegrationTest {
     private MockMvc mockMvc;
 
     @MockitoBean
-    private RestaurantUsecase restaurantUsecase;
+    private CreateRestaurantUseCase createRestaurantUseCase;
 
     @MockitoBean
-    private TokenMemoryPort tokenMemoryPort;
+    private DeleteRestaurantUseCase deleteRestaurantUseCase;
+
+    @MockitoBean
+    private FindAllRestaurantsUseCase findAllRestaurantsUseCase;
+
+    @MockitoBean
+    private FindRestaurantByIdUseCase findRestaurantByIdUseCase;
+
+    @MockitoBean
+    private UpdateRestaurantUseCase updateRestaurantUseCase;
+
+    @MockitoBean
+    private InMemoryToken inMemoryToken;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -60,7 +73,7 @@ class RestaurantControllerIntegrationTest {
                         1L
                 );
 
-        when(restaurantUsecase.save(any())).thenReturn(restaurantResponse);
+        when(createRestaurantUseCase.execute(any())).thenReturn(restaurantResponse);
 
         mockMvc.perform(post("/v1/restaurants")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -80,7 +93,7 @@ class RestaurantControllerIntegrationTest {
                         1L
                 );
 
-        when(restaurantUsecase.update(eq(1L), any())).thenReturn(restaurantResponse);
+        when(updateRestaurantUseCase.execute(eq(1L), any())).thenReturn(restaurantResponse);
 
         mockMvc.perform(patch("/v1/restaurants/1")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -91,7 +104,7 @@ class RestaurantControllerIntegrationTest {
 
     @Test
     void deleteRestaurant_ShouldReturn204() throws Exception {
-        doNothing().when(restaurantUsecase).delete(1L);
+        doNothing().when(deleteRestaurantUseCase).execute(1L);
 
         mockMvc.perform(delete("/v1/restaurants/1"))
                 .andExpect(status().isNoContent());
@@ -99,7 +112,7 @@ class RestaurantControllerIntegrationTest {
 
     @Test
     void getAllRestaurants_ShouldReturnList() throws Exception {
-        when(restaurantUsecase.findAll()).thenReturn(List.of(restaurantResponse));
+        when(findAllRestaurantsUseCase.execute()).thenReturn(List.of(restaurantResponse));
 
         mockMvc.perform(get("/v1/restaurants"))
                 .andExpect(status().isOk())
@@ -108,7 +121,7 @@ class RestaurantControllerIntegrationTest {
 
     @Test
     void getRestaurantById_ShouldReturnRestaurant() throws Exception {
-        when(restaurantUsecase.findById(1L)).thenReturn(restaurantResponse);
+        when(findRestaurantByIdUseCase.execute(1L)).thenReturn(restaurantResponse);
 
         mockMvc.perform(get("/v1/restaurants/1"))
                 .andExpect(status().isOk())

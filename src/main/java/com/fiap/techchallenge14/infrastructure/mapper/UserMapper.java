@@ -4,7 +4,6 @@ import com.fiap.techchallenge14.domain.dto.UserCreateRequestDTO;
 import com.fiap.techchallenge14.domain.dto.UserResponseDTO;
 import com.fiap.techchallenge14.domain.dto.UserUpdateRequestDTO;
 import com.fiap.techchallenge14.domain.model.User;
-import com.fiap.techchallenge14.infrastructure.entity.UserEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -17,8 +16,6 @@ public interface UserMapper {
 
     @Mapping(target = "role", ignore = true)
     User toDomain(UserCreateRequestDTO dto);
-
-    UserEntity toEntity(User domain);
 
     @Mapping(target = "role", ignore = true)
     void updateDomainFromDto(UserUpdateRequestDTO dto, @MappingTarget User user);
