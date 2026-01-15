@@ -1,6 +1,5 @@
 package com.fiap.techchallenge14.application.usecase.role;
 
-import com.fiap.techchallenge14.domain.model.Role;
 import com.fiap.techchallenge14.infrastructure.dto.RoleRequestDTO;
 import com.fiap.techchallenge14.infrastructure.dto.RoleResponseDTO;
 import com.fiap.techchallenge14.infrastructure.entity.RoleEntity;
@@ -24,34 +23,19 @@ public class UpdateRoleUseCase {
 
     @Transactional
     public RoleResponseDTO execute(Long id, RoleRequestDTO dto) {
+
         RoleEntity entity = roleRepository.findById(id)
-                .orElseThrow(() -> new RoleException("Tipo de usuário não encontrado com o ID: " + id));
+                .orElseThrow(() -> new RoleException("Tipo de usuário não encontrado"));
 
-        // Entity -> Domain, aplica update, Domain -> Entity (merge)
-        Role domain = roleEntityMapper.toDomain(entity);
+        String name = dto.name().trim();
 
-        // normaliza o input (trim) antes do mapper
-        RoleRequestDTO normalized = new RoleRequestDTO(dto.name() != null ? dto.name().trim() : null);
-        if (normalized.name() == null || normalized.name().isBlank()) {
-            throw new RoleException("O nome do tipo é obrigatório");
+        if (roleRepository.existsByNameAndIdNot(name, id)) {
+            throw new RoleException("Já existe um tipo de usuário com esse nome: " + name);
         }
 
-        roleMapper.updateDomainFromDto(normalized, domain);
-
-        // aplica no entity via mapper entity
-        roleEntityMapper.updateEntityFromDomain(domain, entity);
-
-        if (entity.getName() == null || entity.getName().isBlank()) {
-            throw new RoleException("Tipo de usuário inválido: " + normalized.name());
-        }
-
-        if (roleRepository.existsByNameAndIdNot(entity.getName(), id)) {
-            throw new RoleException("Já existe um tipo de usuário com esse nome: " + entity.getName());
-        }
+        entity.setName(name);
 
         RoleEntity saved = roleRepository.save(entity);
-        log.info("Tipo de usuário atualizado com ID: {}", saved.getId());
-
         return roleMapper.toResponseDTO(roleEntityMapper.toDomain(saved));
     }
 }

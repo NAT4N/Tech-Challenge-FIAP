@@ -24,27 +24,19 @@ public class CreateRoleUseCase {
 
     @Transactional
     public RoleResponseDTO execute(RoleRequestDTO dto) {
-        String name = dto.name() != null ? dto.name().trim() : null;
-        if (name == null || name.isBlank()) {
-            throw new RoleException("O nome do tipo é obrigatório");
+
+        String name = dto.name().trim();
+
+        if (roleRepository.existsByName(name)) {
+            throw new RoleException("Já existe um tipo de usuário com esse nome: " + name);
         }
 
-        // normaliza via domain/type quando possível
-        Role domain = roleMapper.toDomain(new RoleRequestDTO(name));
+        Role domain = new Role();
+        domain.setName(name);
+
         RoleEntity entity = roleEntityMapper.toEntity(domain);
-
-        if (entity.getName() == null || entity.getName().isBlank()) {
-            throw new RoleException("Tipo de usuário inválido: " + name);
-        }
-
-        if (roleRepository.existsByName(entity.getName())) {
-            throw new RoleException("Já existe um tipo de usuário com esse nome: " + entity.getName());
-        }
-
         RoleEntity saved = roleRepository.save(entity);
-        log.info("Tipo de usuário criado com ID: {}", saved.getId());
 
-        Role savedDomain = roleEntityMapper.toDomain(saved);
-        return roleMapper.toResponseDTO(savedDomain);
+        return roleMapper.toResponseDTO(roleEntityMapper.toDomain(saved));
     }
 }

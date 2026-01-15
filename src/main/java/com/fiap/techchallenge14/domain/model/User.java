@@ -20,5 +20,5 @@ public class User {
     private LocalDateTime lastUpdatedAt;
     private LocalDateTime lastLoginAt;
     private Boolean active;
-    private RoleType role;
+    private Long roleId;
 }

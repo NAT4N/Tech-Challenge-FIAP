@@ -12,6 +12,6 @@ public record UserResponseDTO(
         LocalDateTime lastUpdatedAt,
         LocalDateTime lastLoginAt,
         Boolean active,
-        String roleName
+        Long roleId
 ) {
 }
