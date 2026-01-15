@@ -1,6 +1,6 @@
 package com.fiap.techchallenge14.infrastructure.validation;
 
-import com.fiap.techchallenge14.application.port.out.RoleRepositoryPort;
+import com.fiap.techchallenge14.infrastructure.repository.RoleRepository;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class RoleExistsValidator implements ConstraintValidator<RoleExists, Long> {
 
-    private final RoleRepositoryPort roleRepository;
+    private final RoleRepository roleRepository;
 
     @Override
     public boolean isValid(Long roleId, ConstraintValidatorContext context) {
