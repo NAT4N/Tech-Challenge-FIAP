@@ -1,6 +1,5 @@
 package com.fiap.techchallenge14.domain.model;
 
-import com.fiap.techchallenge14.infrastructure.entity.RoleEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

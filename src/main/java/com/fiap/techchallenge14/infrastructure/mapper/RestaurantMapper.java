@@ -1,8 +1,8 @@
 package com.fiap.techchallenge14.infrastructure.mapper;
 
-import com.fiap.techchallenge14.domain.dto.RestaurantCreateRequestDTO;
-import com.fiap.techchallenge14.domain.dto.RestaurantResponseDTO;
-import com.fiap.techchallenge14.domain.dto.RestaurantUpdateRequestDTO;
+import com.fiap.techchallenge14.infrastructure.dto.RestaurantCreateRequestDTO;
+import com.fiap.techchallenge14.infrastructure.dto.RestaurantResponseDTO;
+import com.fiap.techchallenge14.infrastructure.dto.RestaurantUpdateRequestDTO;
 import com.fiap.techchallenge14.infrastructure.entity.RestaurantEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

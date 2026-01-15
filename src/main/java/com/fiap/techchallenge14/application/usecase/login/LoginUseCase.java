@@ -1,8 +1,8 @@
 package com.fiap.techchallenge14.application.usecase.login;
 
-import com.fiap.techchallenge14.domain.dto.LoginRequestDTO;
-import com.fiap.techchallenge14.domain.dto.LoginResponseDTO;
 import com.fiap.techchallenge14.domain.model.User;
+import com.fiap.techchallenge14.infrastructure.dto.LoginRequestDTO;
+import com.fiap.techchallenge14.infrastructure.dto.LoginResponseDTO;
 import com.fiap.techchallenge14.infrastructure.exception.LoginException;
 import com.fiap.techchallenge14.infrastructure.mapper.UserEntityMapper;
 import com.fiap.techchallenge14.infrastructure.repository.UserRepository;

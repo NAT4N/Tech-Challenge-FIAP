@@ -1,10 +1,10 @@
 package com.fiap.techchallenge14.application.usecase.user;
 
 import com.fiap.techchallenge14.application.usecase.user.support.UserPersistence;
-import com.fiap.techchallenge14.domain.dto.UserResponseDTO;
-import com.fiap.techchallenge14.domain.dto.UserUpdateRequestDTO;
 import com.fiap.techchallenge14.domain.model.RoleType;
 import com.fiap.techchallenge14.domain.model.User;
+import com.fiap.techchallenge14.infrastructure.dto.UserResponseDTO;
+import com.fiap.techchallenge14.infrastructure.dto.UserUpdateRequestDTO;
 import com.fiap.techchallenge14.infrastructure.entity.RoleEntity;
 import com.fiap.techchallenge14.infrastructure.exception.UserException;
 import com.fiap.techchallenge14.infrastructure.mapper.UserMapper;

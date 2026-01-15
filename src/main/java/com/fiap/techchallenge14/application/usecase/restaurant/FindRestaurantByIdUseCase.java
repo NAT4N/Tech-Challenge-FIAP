@@ -1,6 +1,6 @@
 package com.fiap.techchallenge14.application.usecase.restaurant;
 
-import com.fiap.techchallenge14.domain.dto.RestaurantResponseDTO;
+import com.fiap.techchallenge14.infrastructure.dto.RestaurantResponseDTO;
 import com.fiap.techchallenge14.infrastructure.exception.RestaurantException;
 import com.fiap.techchallenge14.infrastructure.mapper.RestaurantMapper;
 import com.fiap.techchallenge14.infrastructure.repository.RestaurantRepository;

@@ -1,40 +1,59 @@
 package com.fiap.techchallenge14.infrastructure.mapper;
 
 import com.fiap.techchallenge14.domain.model.Role;
-import com.fiap.techchallenge14.infrastructure.entity.RoleEntity;
 import com.fiap.techchallenge14.domain.model.RoleType;
+import com.fiap.techchallenge14.infrastructure.entity.RoleEntity;
+import org.mapstruct.*;
 
-public class RoleEntityMapper {
+@Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+public interface RoleEntityMapper {
 
-    public static Role toDomain(RoleEntity entity) {
-        if (entity == null) return null;
-        Role domain = new Role();
-        domain.setId(entity.getId());
+    @Mapping(target = "type", source = "name", qualifiedByName = "nameToRoleTypeString")
+    Role toDomain(RoleEntity entity);
 
-        String name = entity.getName() != null ? entity.getName() : null;
-        domain.setName(name);
+    /**
+     * Estratégia:
+     * - Se domain.type vier preenchido, prioriza ele pra gerar o name.
+     * - Senão usa domain.name direto.
+     */
+    @Mapping(target = "name", expression = "java(resolveRoleName(domain))")
+    RoleEntity toEntity(Role domain);
 
-        if (entity.getName() != null) {
-            try {
-                domain.setType(String.valueOf(RoleType.valueOf(entity.getName())));
-            } catch (Exception ignored) {}
+    @Mapping(target = "name", expression = "java(resolveRoleName(domain))")
+    void updateEntityFromDomain(Role domain, @MappingTarget RoleEntity entity);
+
+    @Named("nameToRoleTypeString")
+    default String nameToRoleTypeString(String name) {
+        if (name == null) return null;
+        try {
+            return RoleType.valueOf(name).name();
+        } catch (Exception ignored) {
+            return null;
         }
-        return domain;
     }
 
-    public static RoleEntity toEntity(Role domain) {
+    default String resolveRoleName(Role domain) {
         if (domain == null) return null;
-        RoleEntity entity = new RoleEntity();
-        entity.setId(domain.getId());
-        if (domain.getType() != null) {
+
+        // se tiver type, usa como fonte de verdade
+        if (domain.getType() != null && !domain.getType().isBlank()) {
             try {
-                entity.setName(String.valueOf(RoleType.valueOf(domain.getType())));
-            } catch (Exception ignored) {}
-        } else if (domain.getName() != null) {
-            try {
-                entity.setName(String.valueOf(RoleType.valueOf(domain.getName())));
-            } catch (Exception ignored) {}
+                return RoleType.valueOf(domain.getType()).name();
+            } catch (Exception ignored) {
+                // se type vier inválido, cai pro name
+            }
         }
-        return entity;
+
+        // senão usa name
+        if (domain.getName() != null && !domain.getName().isBlank()) {
+            // se for um enum válido, normaliza
+            try {
+                return RoleType.valueOf(domain.getName()).name();
+            } catch (Exception ignored) {
+                return domain.getName().trim();
+            }
+        }
+
+        return null;
     }
 }
