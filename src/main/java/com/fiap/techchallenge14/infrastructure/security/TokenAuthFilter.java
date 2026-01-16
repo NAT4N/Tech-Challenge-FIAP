@@ -1,7 +1,6 @@
 package com.fiap.techchallenge14.infrastructure.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fiap.techchallenge14.application.port.out.TokenMemoryPort;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,7 +28,7 @@ public class TokenAuthFilter extends OncePerRequestFilter {
     );
 
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final TokenMemoryPort tokenMemoryPort;
+    private final InMemoryToken inMemoryToken;
 
     @Override
     public void doFilterInternal(
@@ -47,7 +46,7 @@ public class TokenAuthFilter extends OncePerRequestFilter {
         }
 
         String token = request.getHeader(AUTH_HEADER);
-        if (token == null || !tokenMemoryPort.isTokenValid(token)) {
+        if (token == null || !inMemoryToken.isTokenValid(token)) {
             ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.UNAUTHORIZED);
             problem.setTitle("Acesso negado");
             problem.setType(URI.create("/problems/unauthorized"));

@@ -1,6 +1,6 @@
 package com.fiap.techchallenge14.infrastructure.controller;
 
-import com.fiap.techchallenge14.application.port.in.RestaurantUsecase;
+import com.fiap.techchallenge14.application.usecase.restaurant.*;
 import com.fiap.techchallenge14.domain.dto.RestaurantCreateRequestDTO;
 import com.fiap.techchallenge14.domain.dto.RestaurantResponseDTO;
 import com.fiap.techchallenge14.domain.dto.RestaurantUpdateRequestDTO;
@@ -19,38 +19,44 @@ import java.util.List;
 @SecurityRequirement(name = "Authorization")
 public class RestaurantController {
 
-    private final RestaurantUsecase restaurantUsecase;
+    private final CreateRestaurantUseCase createRestaurantUseCase;
+    private final UpdateRestaurantUseCase updateRestaurantUseCase;
+    private final DeleteRestaurantUseCase deleteRestaurantUseCase;
+    private final FindAllRestaurantsUseCase findAllRestaurantsUseCase;
+    private final FindRestaurantByIdUseCase findRestaurantByIdUseCase;
 
     @PostMapping
-    public ResponseEntity<RestaurantResponseDTO> createRestaurant(@Valid @RequestBody RestaurantCreateRequestDTO restaurantRequestDTO) {
-        RestaurantResponseDTO createdRestaurant = restaurantUsecase.save(restaurantRequestDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdRestaurant);
+    public ResponseEntity<RestaurantResponseDTO> createRestaurant(
+            @Valid @RequestBody RestaurantCreateRequestDTO dto
+    ) {
+        RestaurantResponseDTO created = createRestaurantUseCase.execute(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<RestaurantResponseDTO> updateRestaurant(
             @PathVariable Long id,
-            @Valid @RequestBody RestaurantUpdateRequestDTO restaurantRequestDTO) {
-
-        RestaurantResponseDTO updatedRestaurant = restaurantUsecase.update(id, restaurantRequestDTO);
-        return ResponseEntity.ok(updatedRestaurant);
+            @Valid @RequestBody RestaurantUpdateRequestDTO dto
+    ) {
+        RestaurantResponseDTO updated = updateRestaurantUseCase.execute(id, dto);
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRestaurant(@PathVariable Long id) {
-        restaurantUsecase.delete(id);
+        deleteRestaurantUseCase.execute(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping
     public ResponseEntity<List<RestaurantResponseDTO>> getAllRestaurants() {
-        List<RestaurantResponseDTO> restaurants = restaurantUsecase.findAll();
+        List<RestaurantResponseDTO> restaurants = findAllRestaurantsUseCase.execute();
         return ResponseEntity.ok(restaurants);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<RestaurantResponseDTO> getRestaurantById(@PathVariable Long id) {
-        RestaurantResponseDTO restaurant = restaurantUsecase.findById(id);
+        RestaurantResponseDTO restaurant = findRestaurantByIdUseCase.execute(id);
         return ResponseEntity.ok(restaurant);
     }
 }

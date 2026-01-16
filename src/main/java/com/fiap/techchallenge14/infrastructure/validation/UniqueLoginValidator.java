@@ -1,6 +1,6 @@
 package com.fiap.techchallenge14.infrastructure.validation;
 
-import com.fiap.techchallenge14.application.port.out.UserRepositoryPort;
+import com.fiap.techchallenge14.infrastructure.repository.UserRepository;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class UniqueLoginValidator implements ConstraintValidator<UniqueLogin, String> {
 
-    private final UserRepositoryPort userRepository;
+    private final UserRepository userRepository;
 
     @Override
     public boolean isValid(String login, ConstraintValidatorContext context) {
