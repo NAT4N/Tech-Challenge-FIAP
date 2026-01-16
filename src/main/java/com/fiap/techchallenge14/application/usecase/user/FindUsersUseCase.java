@@ -16,8 +16,8 @@ import java.util.List;
 public class FindUsersUseCase {
 
     private final UserRepository userRepository;
-    private final UserEntityMapper userEntityMapper; // Entity -> Domain
-    private final UserMapper userMapper;             // Domain -> ResponseDTO
+    private final UserEntityMapper userEntityMapper;
+    private final UserMapper userMapper;
 
     @Transactional(readOnly = true)
     public List<UserResponseDTO> execute(String name) {
