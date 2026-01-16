@@ -2,9 +2,9 @@ package com.fiap.techchallenge14.infrastructure.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fiap.techchallenge14.application.usecase.restaurant.*;
-import com.fiap.techchallenge14.domain.dto.RestaurantCreateRequestDTO;
-import com.fiap.techchallenge14.domain.dto.RestaurantResponseDTO;
-import com.fiap.techchallenge14.domain.dto.RestaurantUpdateRequestDTO;
+import com.fiap.techchallenge14.infrastructure.dto.RestaurantCreateRequestDTO;
+import com.fiap.techchallenge14.infrastructure.dto.RestaurantResponseDTO;
+import com.fiap.techchallenge14.infrastructure.dto.RestaurantUpdateRequestDTO;
 import com.fiap.techchallenge14.infrastructure.security.InMemoryToken;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

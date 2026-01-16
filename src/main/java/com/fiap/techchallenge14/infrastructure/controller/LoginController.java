@@ -1,8 +1,8 @@
 package com.fiap.techchallenge14.infrastructure.controller;
 
 import com.fiap.techchallenge14.application.usecase.login.LoginUseCase;
-import com.fiap.techchallenge14.domain.dto.LoginRequestDTO;
-import com.fiap.techchallenge14.domain.dto.LoginResponseDTO;
+import com.fiap.techchallenge14.infrastructure.dto.LoginRequestDTO;
+import com.fiap.techchallenge14.infrastructure.dto.LoginResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

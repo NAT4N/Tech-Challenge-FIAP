@@ -2,11 +2,11 @@ package com.fiap.techchallenge14.application.usecase.restaurant;
 
 import com.fiap.techchallenge14.application.port.out.RestaurantRepositoryPort;
 import com.fiap.techchallenge14.application.port.out.UserRepositoryPort;
-import com.fiap.techchallenge14.domain.dto.RestaurantCreateRequestDTO;
-import com.fiap.techchallenge14.domain.dto.RestaurantResponseDTO;
-import com.fiap.techchallenge14.domain.dto.RestaurantUpdateRequestDTO;
 import com.fiap.techchallenge14.domain.model.RoleType;
 import com.fiap.techchallenge14.domain.model.User;
+import com.fiap.techchallenge14.infrastructure.dto.RestaurantCreateRequestDTO;
+import com.fiap.techchallenge14.infrastructure.dto.RestaurantResponseDTO;
+import com.fiap.techchallenge14.infrastructure.dto.RestaurantUpdateRequestDTO;
 import com.fiap.techchallenge14.infrastructure.entity.RestaurantEntity;
 import com.fiap.techchallenge14.infrastructure.entity.UserEntity;
 import com.fiap.techchallenge14.infrastructure.exception.RestaurantException;
@@ -24,7 +24,8 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class RestaurantUsecaseImplTest {

@@ -1,7 +1,7 @@
 package com.fiap.techchallenge14.application.usecase.restaurant;
 
-import com.fiap.techchallenge14.domain.dto.RestaurantResponseDTO;
-import com.fiap.techchallenge14.domain.dto.RestaurantUpdateRequestDTO;
+import com.fiap.techchallenge14.infrastructure.dto.RestaurantResponseDTO;
+import com.fiap.techchallenge14.infrastructure.dto.RestaurantUpdateRequestDTO;
 import com.fiap.techchallenge14.infrastructure.entity.RestaurantEntity;
 import com.fiap.techchallenge14.infrastructure.entity.UserEntity;
 import com.fiap.techchallenge14.infrastructure.exception.RestaurantException;

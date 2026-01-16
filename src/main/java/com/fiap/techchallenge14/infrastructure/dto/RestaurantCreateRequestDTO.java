@@ -1,4 +1,4 @@
-package com.fiap.techchallenge14.domain.dto;
+package com.fiap.techchallenge14.infrastructure.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

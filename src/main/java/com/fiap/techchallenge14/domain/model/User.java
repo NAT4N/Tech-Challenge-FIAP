@@ -1,6 +1,5 @@
 package com.fiap.techchallenge14.domain.model;
 
-import com.fiap.techchallenge14.infrastructure.entity.RoleEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,5 +20,5 @@ public class User {
     private LocalDateTime lastUpdatedAt;
     private LocalDateTime lastLoginAt;
     private Boolean active;
-    private RoleType role;
+    private Long roleId;
 }

@@ -1,14 +1,11 @@
 package com.fiap.techchallenge14.application.usecase.user;
 
 import com.fiap.techchallenge14.application.usecase.user.support.UserPersistence;
-import com.fiap.techchallenge14.domain.dto.UserResponseDTO;
-import com.fiap.techchallenge14.domain.dto.UserUpdateRequestDTO;
-import com.fiap.techchallenge14.domain.model.RoleType;
 import com.fiap.techchallenge14.domain.model.User;
-import com.fiap.techchallenge14.infrastructure.entity.RoleEntity;
+import com.fiap.techchallenge14.infrastructure.dto.UserResponseDTO;
+import com.fiap.techchallenge14.infrastructure.dto.UserUpdateRequestDTO;
 import com.fiap.techchallenge14.infrastructure.exception.UserException;
 import com.fiap.techchallenge14.infrastructure.mapper.UserMapper;
-import com.fiap.techchallenge14.infrastructure.repository.RoleRepository;
 import com.fiap.techchallenge14.infrastructure.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,8 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UpdateUserUseCase {
 
-    private final UserRepository userRepository;   // pra validar email/login sem converter tudo
-    private final RoleRepository roleRepository;
+    private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final UserPersistence userPersistence;
 
@@ -42,16 +38,6 @@ public class UpdateUserUseCase {
                 });
 
         userMapper.updateDomainFromDto(dto, user);
-
-        RoleEntity role = roleRepository.findById(dto.roleId())
-                .orElseThrow(() -> new UserException("Perfil nao encontrado com o ID: " + dto.roleId()));
-
-        try {
-            user.setRole(RoleType.valueOf(role.getName()));
-        } catch (IllegalArgumentException e) {
-            log.error("Role name {} invalid", role.getName());
-            throw new UserException("Perfil inválido: " + role.getName());
-        }
 
         User updated = userPersistence.saveDomain(user);
         log.info("Usuário atualizado com o ID: {}", updated.getId());
