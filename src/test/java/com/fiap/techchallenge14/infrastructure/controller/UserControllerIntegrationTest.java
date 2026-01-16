@@ -5,11 +5,11 @@ import com.fiap.techchallenge14.application.port.in.UserUsecase;
 import com.fiap.techchallenge14.application.port.out.RoleRepositoryPort;
 import com.fiap.techchallenge14.application.port.out.TokenMemoryPort;
 import com.fiap.techchallenge14.application.port.out.UserRepositoryPort;
-import com.fiap.techchallenge14.domain.dto.PasswordChangeRequestDTO;
-import com.fiap.techchallenge14.domain.dto.UserCreateRequestDTO;
-import com.fiap.techchallenge14.domain.dto.UserResponseDTO;
-import com.fiap.techchallenge14.domain.dto.UserUpdateRequestDTO;
 import com.fiap.techchallenge14.domain.model.Role;
+import com.fiap.techchallenge14.infrastructure.dto.PasswordChangeRequestDTO;
+import com.fiap.techchallenge14.infrastructure.dto.UserCreateRequestDTO;
+import com.fiap.techchallenge14.infrastructure.dto.UserResponseDTO;
+import com.fiap.techchallenge14.infrastructure.dto.UserUpdateRequestDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,8 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(UserController.class)
 @AutoConfigureMockMvc(addFilters = false)

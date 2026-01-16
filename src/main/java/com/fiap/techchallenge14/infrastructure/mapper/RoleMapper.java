@@ -1,17 +1,18 @@
 package com.fiap.techchallenge14.infrastructure.mapper;
 
 import com.fiap.techchallenge14.domain.model.Role;
-import com.fiap.techchallenge14.infrastructure.entity.RoleEntity;
+import com.fiap.techchallenge14.infrastructure.dto.RoleRequestDTO;
+import com.fiap.techchallenge14.infrastructure.dto.RoleResponseDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-public interface RoleEntityMapper {
+public interface RoleMapper {
 
-    Role toDomain(RoleEntity entity);
+    Role toDomain(RoleRequestDTO dto);
 
-    RoleEntity toEntity(Role domain);
+    void updateDomainFromDto(RoleRequestDTO dto, @MappingTarget Role role);
 
-    void updateEntityFromDomain(Role domain, @MappingTarget RoleEntity entity);
+    RoleResponseDTO toResponseDTO(Role role);
 }

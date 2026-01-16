@@ -2,9 +2,9 @@ package com.fiap.techchallenge14.application.usecase.login;
 
 import com.fiap.techchallenge14.application.port.out.TokenMemoryPort;
 import com.fiap.techchallenge14.application.port.out.UserRepositoryPort;
-import com.fiap.techchallenge14.domain.dto.LoginRequestDTO;
-import com.fiap.techchallenge14.domain.dto.LoginResponseDTO;
 import com.fiap.techchallenge14.domain.model.User;
+import com.fiap.techchallenge14.infrastructure.dto.LoginRequestDTO;
+import com.fiap.techchallenge14.infrastructure.dto.LoginResponseDTO;
 import com.fiap.techchallenge14.infrastructure.exception.LoginException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,11 +15,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class LoginUsecaseImplTest {

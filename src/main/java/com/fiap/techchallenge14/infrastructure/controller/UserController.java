@@ -1,10 +1,10 @@
 package com.fiap.techchallenge14.infrastructure.controller;
 
 import com.fiap.techchallenge14.application.usecase.user.*;
-import com.fiap.techchallenge14.domain.dto.PasswordChangeRequestDTO;
-import com.fiap.techchallenge14.domain.dto.UserCreateRequestDTO;
-import com.fiap.techchallenge14.domain.dto.UserResponseDTO;
-import com.fiap.techchallenge14.domain.dto.UserUpdateRequestDTO;
+import com.fiap.techchallenge14.infrastructure.dto.PasswordChangeRequestDTO;
+import com.fiap.techchallenge14.infrastructure.dto.UserCreateRequestDTO;
+import com.fiap.techchallenge14.infrastructure.dto.UserResponseDTO;
+import com.fiap.techchallenge14.infrastructure.dto.UserUpdateRequestDTO;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

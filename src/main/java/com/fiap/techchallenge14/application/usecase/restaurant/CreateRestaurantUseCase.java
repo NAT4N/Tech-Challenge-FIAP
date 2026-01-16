@@ -1,7 +1,7 @@
 package com.fiap.techchallenge14.application.usecase.restaurant;
 
-import com.fiap.techchallenge14.domain.dto.RestaurantCreateRequestDTO;
-import com.fiap.techchallenge14.domain.dto.RestaurantResponseDTO;
+import com.fiap.techchallenge14.infrastructure.dto.RestaurantCreateRequestDTO;
+import com.fiap.techchallenge14.infrastructure.dto.RestaurantResponseDTO;
 import com.fiap.techchallenge14.infrastructure.entity.RestaurantEntity;
 import com.fiap.techchallenge14.infrastructure.entity.UserEntity;
 import com.fiap.techchallenge14.infrastructure.exception.RestaurantException;
@@ -18,8 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CreateRestaurantUseCase {
 
-    private final RestaurantRepository restaurantRepository; // JPA
-    private final UserRepository userRepository;             // JPA
+    private final RestaurantRepository restaurantRepository;
+    private final UserRepository userRepository;
     private final RestaurantMapper restaurantMapper;
 
     @Transactional
@@ -27,12 +27,6 @@ public class CreateRestaurantUseCase {
 
         UserEntity owner = userRepository.findById(dto.ownerId())
                 .orElseThrow(() -> new RestaurantException("Proprietário não encontrado com o ID: " + dto.ownerId()));
-
-        // TODO: regra: se CLIENT => vira RESTAURANT_OWNER
-//        if (owner.getRole() != null && RoleType.CLIENT.name().equals(owner.getRole().getName())) {
-//            owner.getRole().setName(RoleType.RESTAURANT_OWNER.name());
-//            userRepository.save(owner);
-//        }
 
         RestaurantEntity restaurantEntity = restaurantMapper.toDomain(dto);
         restaurantEntity.setOwner(owner);

@@ -1,15 +1,13 @@
 package com.fiap.techchallenge14.infrastructure.mapper;
 
-import com.fiap.techchallenge14.domain.dto.UserCreateRequestDTO;
-import com.fiap.techchallenge14.domain.dto.UserResponseDTO;
-import com.fiap.techchallenge14.domain.dto.UserUpdateRequestDTO;
 import com.fiap.techchallenge14.domain.model.RoleType;
 import com.fiap.techchallenge14.domain.model.User;
+import com.fiap.techchallenge14.infrastructure.dto.UserCreateRequestDTO;
+import com.fiap.techchallenge14.infrastructure.dto.UserResponseDTO;
+import com.fiap.techchallenge14.infrastructure.dto.UserUpdateRequestDTO;
 import com.fiap.techchallenge14.infrastructure.entity.UserEntity;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
-
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 

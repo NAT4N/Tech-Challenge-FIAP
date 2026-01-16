@@ -16,4 +16,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long>, JpaSpec
     List<UserEntity> findByNameContainingIgnoreCase(String name);
 
     Optional<UserEntity> findByLoginAndPassword(String login, String password);
+
+    long countByRoleId(Long roleId);
 }

@@ -1,6 +1,6 @@
 package com.fiap.techchallenge14.application.usecase.user;
 
-import com.fiap.techchallenge14.domain.dto.UserResponseDTO;
+import com.fiap.techchallenge14.infrastructure.dto.UserResponseDTO;
 import com.fiap.techchallenge14.infrastructure.exception.UserException;
 import com.fiap.techchallenge14.infrastructure.mapper.UserEntityMapper;
 import com.fiap.techchallenge14.infrastructure.mapper.UserMapper;
