@@ -1,6 +1,6 @@
 package com.fiap.techchallenge14.infrastructure.controller;
 
-import com.fiap.techchallenge14.application.usecase.login.LoginUseCase;
+import com.fiap.techchallenge14.application.usecase.login.AuthenticateUserUseCase;
 import com.fiap.techchallenge14.infrastructure.dto.LoginRequestDTO;
 import com.fiap.techchallenge14.infrastructure.dto.LoginResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class LoginController {
 
-    private final LoginUseCase loginUsecase;
+    private final AuthenticateUserUseCase authenticateUserUsecase;
 
     @PostMapping
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequest) {
-        LoginResponseDTO token = loginUsecase.execute(loginRequest);
+        LoginResponseDTO token = authenticateUserUsecase.execute(loginRequest);
         return ResponseEntity.ok(token);
     }
 }

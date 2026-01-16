@@ -17,7 +17,7 @@ import java.util.UUID;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class LoginUseCase {
+public class AuthenticateUserUseCase {
 
     private final UserRepository userRepository;
     private final InMemoryToken inMemoryToken;

@@ -5,7 +5,6 @@ import com.fiap.techchallenge14.domain.model.User;
 import com.fiap.techchallenge14.infrastructure.dto.UserCreateRequestDTO;
 import com.fiap.techchallenge14.infrastructure.dto.UserResponseDTO;
 import com.fiap.techchallenge14.infrastructure.mapper.UserMapper;
-import com.fiap.techchallenge14.infrastructure.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,9 +17,8 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class CreateUserUseCase {
 
-    private final RoleRepository roleRepository;
-    private final UserMapper userMapper;           // DTO <-> Domain + Domain -> ResponseDTO
-    private final UserPersistence userPersistence; // Domain <-> Entity + save/find
+    private final UserMapper userMapper;
+    private final UserPersistence userPersistence;
 
     @Transactional
     public UserResponseDTO execute(UserCreateRequestDTO dto) {
