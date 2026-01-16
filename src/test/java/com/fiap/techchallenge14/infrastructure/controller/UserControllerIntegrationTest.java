@@ -1,15 +1,15 @@
 package com.fiap.techchallenge14.infrastructure.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fiap.techchallenge14.application.port.in.UserUsecase;
-import com.fiap.techchallenge14.application.port.out.RoleRepositoryPort;
-import com.fiap.techchallenge14.application.port.out.TokenMemoryPort;
-import com.fiap.techchallenge14.application.port.out.UserRepositoryPort;
-import com.fiap.techchallenge14.domain.model.Role;
+import com.fiap.techchallenge14.application.usecase.user.*;
 import com.fiap.techchallenge14.infrastructure.dto.PasswordChangeRequestDTO;
 import com.fiap.techchallenge14.infrastructure.dto.UserCreateRequestDTO;
 import com.fiap.techchallenge14.infrastructure.dto.UserResponseDTO;
 import com.fiap.techchallenge14.infrastructure.dto.UserUpdateRequestDTO;
+import com.fiap.techchallenge14.infrastructure.entity.RoleEntity;
+import com.fiap.techchallenge14.infrastructure.repository.RoleRepository;
+import com.fiap.techchallenge14.infrastructure.repository.UserRepository;
+import com.fiap.techchallenge14.infrastructure.security.InMemoryToken;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +23,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -39,16 +38,28 @@ class UserControllerIntegrationTest {
     private MockMvc mockMvc;
 
     @MockitoBean
-    private UserUsecase userUsecase;
+    private CreateUserUseCase createUserUseCase;
 
     @MockitoBean
-    private TokenMemoryPort tokenMemoryPort;
+    private UpdateUserUseCase updateUserUseCase;
 
     @MockitoBean
-    private RoleRepositoryPort roleRepositoryPort;
+    private DeleteUserUseCase deleteUserUseCase;
 
     @MockitoBean
-    private UserRepositoryPort userRepositoryPort;
+    private FindUsersUseCase findUsersUseCase;
+
+    @MockitoBean
+    private ChangeUserPasswordUseCase changeUserPasswordUseCase;
+
+    @MockitoBean
+    private InMemoryToken inMemoryToken;
+
+    @MockitoBean
+    private RoleRepository roleRepository;
+
+    @MockitoBean
+    private UserRepository userRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -67,7 +78,7 @@ class UserControllerIntegrationTest {
                 LocalDateTime.now(),
                 LocalDateTime.now(),
                 true,
-                "Role"
+                1L
         );
     }
 
@@ -82,10 +93,8 @@ class UserControllerIntegrationTest {
                 1L
         );
 
-        when(userUsecase.save(any())).thenReturn(userResponse);
-        when(roleRepositoryPort.findById(1L)).thenReturn(Optional.of(new Role(1L, "Role", "Description")));
-        when(userRepositoryPort.findByEmail("user@email.com")).thenReturn(Optional.empty());
-        when(userRepositoryPort.findByLogin("login")).thenReturn(Optional.empty());
+        when(createUserUseCase.execute(any())).thenReturn(userResponse);
+        when(roleRepository.findById(1L)).thenReturn(Optional.of(new RoleEntity(1L, "Role")));
 
         mockMvc.perform(post("/v1/users")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -104,18 +113,19 @@ class UserControllerIntegrationTest {
                 1L
         );
 
-        when(userUsecase.update(eq(1L), any())).thenReturn(userResponse);
-        when(roleRepositoryPort.findById(1L)).thenReturn(Optional.of(new Role(1L, "Role", "Description")));
+        when(updateUserUseCase.execute(eq(1L), any(UserUpdateRequestDTO.class))).thenReturn(userResponse);
+        when(roleRepository.findById(1L)).thenReturn(Optional.of(new RoleEntity(1L, "Role")));
 
         mockMvc.perform(patch("/v1/users/1")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1));
     }
 
     @Test
     void deleteUser_ShouldReturn204() throws Exception {
-        doNothing().when(userUsecase).delete(1L);
+        doNothing().when(deleteUserUseCase).execute(1L);
 
         mockMvc.perform(delete("/v1/users/1"))
                 .andExpect(status().isNoContent());
@@ -123,7 +133,7 @@ class UserControllerIntegrationTest {
 
     @Test
     void getUsers_ShouldReturnList() throws Exception {
-        when(userUsecase.findUsers(any())).thenReturn(List.of(userResponse));
+        when(findUsersUseCase.execute(any())).thenReturn(List.of(userResponse));
 
         mockMvc.perform(get("/v1/users"))
                 .andExpect(status().isOk())
@@ -134,7 +144,7 @@ class UserControllerIntegrationTest {
     void changePassword_ShouldReturn204() throws Exception {
         PasswordChangeRequestDTO request = new PasswordChangeRequestDTO("newPassword123");
 
-        doNothing().when(userUsecase).changePassword(eq(1L), any());
+        doNothing().when(changeUserPasswordUseCase).execute(eq(1L), anyString());
 
         mockMvc.perform(patch("/v1/users/1/password")
                         .contentType(MediaType.APPLICATION_JSON)

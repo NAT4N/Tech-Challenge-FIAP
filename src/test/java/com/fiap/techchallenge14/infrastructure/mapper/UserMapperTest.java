@@ -1,13 +1,13 @@
 package com.fiap.techchallenge14.infrastructure.mapper;
 
-import com.fiap.techchallenge14.domain.model.RoleType;
 import com.fiap.techchallenge14.domain.model.User;
 import com.fiap.techchallenge14.infrastructure.dto.UserCreateRequestDTO;
 import com.fiap.techchallenge14.infrastructure.dto.UserResponseDTO;
 import com.fiap.techchallenge14.infrastructure.dto.UserUpdateRequestDTO;
-import com.fiap.techchallenge14.infrastructure.entity.UserEntity;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
+
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,20 +20,39 @@ class UserMapperTest {
         User user = new User();
         user.setId(1L);
         user.setName("John Doe");
-        user.setRole(RoleType.CLIENT);
+        user.setEmail("john@example.com");
+        user.setAddress("Address 1");
+        user.setLogin("johndoe");
+        user.setCreatedAt(LocalDateTime.now());
+        user.setLastUpdatedAt(LocalDateTime.now());
+        user.setLastLoginAt(LocalDateTime.now());
+        user.setActive(true);
+        user.setRoleId(10L);
 
         UserResponseDTO response = mapper.toResponseDTO(user);
 
         assertNotNull(response);
         assertEquals(user.getId(), response.id());
         assertEquals(user.getName(), response.name());
-        assertEquals("CLIENT", response.roleName());
+        assertEquals(user.getEmail(), response.email());
+        assertEquals(user.getAddress(), response.address());
+        assertEquals(user.getLogin(), response.login());
+        assertEquals(user.getCreatedAt(), response.createdAt());
+        assertEquals(user.getLastUpdatedAt(), response.lastUpdatedAt());
+        assertEquals(user.getLastLoginAt(), response.lastLoginAt());
+        assertEquals(user.getActive(), response.active());
+        assertEquals(user.getRoleId(), response.roleId());
     }
 
     @Test
-    void toDomain_ShouldMapCorrectly() {
+    void toDomain_ShouldMapCorrectly_FromCreateDto() {
         UserCreateRequestDTO dto = new UserCreateRequestDTO(
-                "John Doe", "john@example.com", "password", "Address 1", "johndoe", 1L
+                "John Doe",
+                "john@example.com",
+                "password",
+                "Address 1",
+                "johndoe",
+                10L
         );
 
         User user = mapper.toDomain(dto);
@@ -44,24 +63,7 @@ class UserMapperTest {
         assertEquals(dto.password(), user.getPassword());
         assertEquals(dto.address(), user.getAddress());
         assertEquals(dto.login(), user.getLogin());
-        assertNull(user.getRole());
-    }
-
-    @Test
-    void toEntity_ShouldMapCorrectly() {
-        User user = new User();
-        user.setId(1L);
-        user.setName("John Doe");
-        user.setEmail("john@example.com");
-        user.setActive(true);
-
-        UserEntity entity = mapper.toEntity(user);
-
-        assertNotNull(entity);
-        assertEquals(user.getId(), entity.getId());
-        assertEquals(user.getName(), entity.getName());
-        assertEquals(user.getEmail(), entity.getEmail());
-        assertTrue(entity.getActive());
+        assertEquals(dto.roleId(), user.getRoleId());
     }
 
     @Test
@@ -69,9 +71,16 @@ class UserMapperTest {
         User user = new User();
         user.setName("Old Name");
         user.setEmail("old@example.com");
+        user.setAddress("Old Address");
+        user.setLogin("oldlogin");
+        user.setRoleId(1L);
 
         UserUpdateRequestDTO dto = new UserUpdateRequestDTO(
-                "New Name", "new@example.com", "New Address", "newlogin", 1L
+                "New Name",
+                "new@example.com",
+                "New Address",
+                "newlogin",
+                2L
         );
 
         mapper.updateDomainFromDto(dto, user);
@@ -80,6 +89,7 @@ class UserMapperTest {
         assertEquals(dto.email(), user.getEmail());
         assertEquals(dto.address(), user.getAddress());
         assertEquals(dto.login(), user.getLogin());
+        assertEquals(dto.roleId(), user.getRoleId());
     }
 
     @Test
@@ -90,10 +100,5 @@ class UserMapperTest {
     @Test
     void toDomain_WithNull_ShouldReturnNull() {
         assertNull(mapper.toDomain(null));
-    }
-
-    @Test
-    void toEntity_WithNull_ShouldReturnNull() {
-        assertNull(mapper.toEntity(null));
     }
 }
