@@ -1,10 +1,10 @@
 package com.fiap.techchallenge14.infrastructure.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fiap.techchallenge14.application.port.in.LoginUsecase;
-import com.fiap.techchallenge14.application.port.out.TokenMemoryPort;
+import com.fiap.techchallenge14.application.usecase.login.AuthenticateUserUseCase;
 import com.fiap.techchallenge14.infrastructure.dto.LoginRequestDTO;
 import com.fiap.techchallenge14.infrastructure.dto.LoginResponseDTO;
+import com.fiap.techchallenge14.infrastructure.security.InMemoryToken;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -27,10 +27,10 @@ class LoginControllerIntegrationTest {
     private MockMvc mockMvc;
 
     @MockitoBean
-    private LoginUsecase loginUsecase;
+    private AuthenticateUserUseCase authenticateUserUseCase;
 
     @MockitoBean
-    private TokenMemoryPort tokenMemoryPort;
+    private InMemoryToken inMemoryToken;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -39,7 +39,8 @@ class LoginControllerIntegrationTest {
     void login_ShouldReturn200() throws Exception {
         LoginRequestDTO request = new LoginRequestDTO("user", "pass");
         LoginResponseDTO response = new LoginResponseDTO("token");
-        when(loginUsecase.login(any())).thenReturn(response);
+
+        when(authenticateUserUseCase.execute(any())).thenReturn(response);
 
         mockMvc.perform(post("/v1/login")
                         .contentType(MediaType.APPLICATION_JSON)

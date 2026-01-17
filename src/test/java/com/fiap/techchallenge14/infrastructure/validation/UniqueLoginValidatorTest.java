@@ -1,7 +1,7 @@
 package com.fiap.techchallenge14.infrastructure.validation;
 
-import com.fiap.techchallenge14.application.port.out.UserRepositoryPort;
-import com.fiap.techchallenge14.domain.model.User;
+import com.fiap.techchallenge14.infrastructure.entity.UserEntity;
+import com.fiap.techchallenge14.infrastructure.repository.UserRepository;
 import jakarta.validation.ConstraintValidatorContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,14 +11,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UniqueLoginValidatorTest {
 
     @Mock
-    private UserRepositoryPort userRepository;
+    private UserRepository userRepository;
 
     @Mock
     private ConstraintValidatorContext context;
@@ -48,7 +49,7 @@ class UniqueLoginValidatorTest {
 
     @Test
     void isValid_ShouldReturnFalse_WhenLoginExists() {
-        when(userRepository.findByLogin("johndoe")).thenReturn(Optional.of(new User()));
+        when(userRepository.findByLogin("johndoe")).thenReturn(Optional.of(new UserEntity()));
         assertFalse(validator.isValid("johndoe", context));
     }
 }

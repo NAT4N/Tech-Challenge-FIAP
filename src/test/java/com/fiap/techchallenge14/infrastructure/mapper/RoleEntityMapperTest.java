@@ -1,82 +1,49 @@
 package com.fiap.techchallenge14.infrastructure.mapper;
 
 import com.fiap.techchallenge14.domain.model.Role;
-import com.fiap.techchallenge14.domain.model.RoleType;
 import com.fiap.techchallenge14.infrastructure.entity.RoleEntity;
 import org.junit.jupiter.api.Test;
+import org.mapstruct.factory.Mappers;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class RoleEntityMapperTest {
 
+    private final RoleEntityMapper mapper = Mappers.getMapper(RoleEntityMapper.class);
+
     @Test
-    void toDomain_ShouldMapCorrectly() {
+    void toDomain_ShouldMapEntityToDomain() {
         RoleEntity entity = new RoleEntity();
         entity.setId(1L);
         entity.setName("CLIENT");
 
-        Role domain = RoleEntityMapper.toDomain(entity);
+        Role domain = mapper.toDomain(entity);
 
         assertNotNull(domain);
-        assertEquals(entity.getId(), domain.getId());
+        assertEquals(1L, domain.getId());
         assertEquals("CLIENT", domain.getName());
-        assertEquals("CLIENT", domain.getType());
     }
 
     @Test
-    void toDomain_WithInvalidName_ShouldHandleGracefully() {
-        RoleEntity entity = new RoleEntity();
-        entity.setName("INVALID");
-
-        Role domain = RoleEntityMapper.toDomain(entity);
-
-        assertNotNull(domain);
-        assertEquals("INVALID", domain.getName());
-        assertNull(domain.getType());
-    }
-
-    @Test
-    void toDomain_WithNull_ShouldReturnNull() {
-        assertNull(RoleEntityMapper.toDomain(null));
-    }
-
-    @Test
-    void toEntity_ShouldMapCorrectlyFromType() {
+    void toEntity_ShouldMapDomainToEntity() {
         Role domain = new Role();
-        domain.setId(1L);
-        domain.setType("CLIENT");
+        domain.setId(2L);
+        domain.setName("ADMIN");
 
-        RoleEntity entity = RoleEntityMapper.toEntity(domain);
+        RoleEntity entity = mapper.toEntity(domain);
 
         assertNotNull(entity);
-        assertEquals(domain.getId(), entity.getId());
-        assertEquals("CLIENT", entity.getName());
+        assertEquals(2L, entity.getId());
+        assertEquals("ADMIN", entity.getName());
     }
 
     @Test
-    void toEntity_ShouldMapCorrectlyFromNameIfTypeNull() {
-        Role domain = new Role();
-        domain.setName("RESTAURANT_OWNER");
-
-        RoleEntity entity = RoleEntityMapper.toEntity(domain);
-
-        assertNotNull(entity);
-        assertEquals("RESTAURANT_OWNER", entity.getName());
+    void toDomain_ShouldReturnNull_WhenEntityIsNull() {
+        assertNull(mapper.toDomain(null));
     }
 
     @Test
-    void toEntity_WithInvalidType_ShouldHandleGracefully() {
-        Role domain = new Role();
-        domain.setType("INVALID");
-
-        RoleEntity entity = RoleEntityMapper.toEntity(domain);
-
-        assertNotNull(entity);
-        assertNull(entity.getName());
-    }
-
-    @Test
-    void toEntity_WithNull_ShouldReturnNull() {
-        assertNull(RoleEntityMapper.toEntity(null));
+    void toEntity_ShouldReturnNull_WhenDomainIsNull() {
+        assertNull(mapper.toEntity(null));
     }
 }
