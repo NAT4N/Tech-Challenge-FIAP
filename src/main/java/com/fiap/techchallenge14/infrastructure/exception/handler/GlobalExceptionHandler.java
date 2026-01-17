@@ -1,5 +1,7 @@
 package com.fiap.techchallenge14.infrastructure.exception.handler;
 
+import com.fiap.techchallenge14.infrastructure.exception.LoginException;
+import com.fiap.techchallenge14.infrastructure.exception.MenuItemException;
 import com.fiap.techchallenge14.infrastructure.exception.RestaurantException;
 import com.fiap.techchallenge14.infrastructure.exception.UserException;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,14 @@ public class GlobalExceptionHandler {
         return problem;
     }
 
+    @ExceptionHandler(LoginException.class)
+    public ProblemDetail handleLoginException(RuntimeException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
+        problem.setTitle("Erro de Usuário");
+        problem.setType(URI.create("/problems/login-error"));
+        return problem;
+    }
+
     @ExceptionHandler(UserException.class)
     public ProblemDetail handleUserException(UserException ex) {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
@@ -37,6 +47,14 @@ public class GlobalExceptionHandler {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
         problem.setTitle("Erro de Restaurante");
         problem.setType(URI.create("/problems/restaurant-error"));
+        return problem;
+    }
+
+    @ExceptionHandler(MenuItemException.class)
+    public ProblemDetail handleMenuItemException(MenuItemException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+        problem.setTitle("Erro de Item do Cardápio");
+        problem.setType(URI.create("/problems/menu-item-error"));
         return problem;
     }
 
