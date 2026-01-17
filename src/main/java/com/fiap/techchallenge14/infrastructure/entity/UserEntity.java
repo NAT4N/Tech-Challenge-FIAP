@@ -29,10 +29,4 @@ public class UserEntity {
     @ManyToOne
     @JoinColumn(name = "role_id")
     private RoleEntity role;
-
-    @PrePersist
-    private void prePersist() {
-        this.lastUpdatedAt = LocalDateTime.now();
-    }
-
 }
