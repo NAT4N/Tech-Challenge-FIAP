@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,11 +34,6 @@ class MenuItemControllerIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    private Long userId;
-
     private Long restaurantId;
 
     @BeforeAll
@@ -61,7 +55,7 @@ class MenuItemControllerIntegrationTest {
                 .getResponse()
                 .getContentAsString();
 
-        userId = objectMapper.readTree(responseUser).get("id").asLong();
+        Long userId = objectMapper.readTree(responseUser).get("id").asLong();
 
         RestaurantCreateRequestDTO requestRetaurante = new RestaurantCreateRequestDTO(
                 "Restaurante Teste",
@@ -131,10 +125,10 @@ class MenuItemControllerIntegrationTest {
 
     @Test
     void shouldFindMenuItemByRestaurant() throws Exception {
-        String response = mockMvc.perform(get("/v1/menu-items/restaurant/" + restaurantId)
+        mockMvc.perform(get("/v1/menu-items/restaurant/" + restaurantId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(1)).toString();
+                .andExpect(jsonPath("$.length()").value(1));
     }
 
     @Test
