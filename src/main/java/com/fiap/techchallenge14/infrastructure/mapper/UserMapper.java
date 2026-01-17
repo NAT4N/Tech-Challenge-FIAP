@@ -20,7 +20,7 @@ public interface UserMapper {
     void updateDomainFromDto(UserUpdateRequestDTO dto, @MappingTarget User user);
 
     @Mapping(source = "role.id", target = "roleId")
-    User toDomain(UserEntity entity);
+    User entityToDomain(UserEntity entity);
 
     @Mapping(target = "role", ignore = true)
     void updateEntityFromDomain(User domain, @MappingTarget UserEntity entity);

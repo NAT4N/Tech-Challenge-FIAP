@@ -57,14 +57,14 @@ class UserPersistenceTest {
     @Test
     void findDomainByIdOrThrow_ShouldReturnDomain_WhenFound() {
         when(userRepository.findById(1L)).thenReturn(Optional.of(entity));
-        when(userMapper.toDomain(entity)).thenReturn(domain);
+        when(userMapper.entityToDomain(entity)).thenReturn(domain);
 
         User result = userPersistence.findDomainByIdOrThrow(1L);
 
         assertNotNull(result);
         assertEquals(1L, result.getId());
         verify(userRepository).findById(1L);
-        verify(userMapper).toDomain(entity);
+        verify(userMapper).entityToDomain(entity);
     }
 
     @Test
@@ -94,7 +94,7 @@ class UserPersistenceTest {
 
         when(roleRepository.findById(10L)).thenReturn(Optional.of(role));
         when(userRepository.save(any(UserEntity.class))).thenReturn(savedEntity);
-        when(userMapper.toDomain(savedEntity)).thenReturn(savedDomain);
+        when(userMapper.entityToDomain(savedEntity)).thenReturn(savedDomain);
 
         User result = userPersistence.saveDomain(newUser);
 
@@ -108,7 +108,7 @@ class UserPersistenceTest {
         verify(roleRepository).findById(10L);
 
         verify(userRepository).save(any(UserEntity.class));
-        verify(userMapper).toDomain(savedEntity);
+        verify(userMapper).entityToDomain(savedEntity);
     }
 
     @Test
@@ -122,7 +122,7 @@ class UserPersistenceTest {
         when(userRepository.findById(1L)).thenReturn(Optional.of(existingEntity));
         when(roleRepository.findById(10L)).thenReturn(Optional.of(role));
         when(userRepository.save(existingEntity)).thenReturn(savedEntity);
-        when(userMapper.toDomain(savedEntity)).thenReturn(domain);
+        when(userMapper.entityToDomain(savedEntity)).thenReturn(domain);
 
         User result = userPersistence.saveDomain(domain);
 
@@ -134,7 +134,7 @@ class UserPersistenceTest {
         verify(roleRepository).findById(10L);
 
         verify(userRepository).save(existingEntity);
-        verify(userMapper).toDomain(savedEntity);
+        verify(userMapper).entityToDomain(savedEntity);
     }
 
     @Test
@@ -142,7 +142,7 @@ class UserPersistenceTest {
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
         when(roleRepository.findById(10L)).thenReturn(Optional.of(role));
         when(userRepository.save(any(UserEntity.class))).thenAnswer(inv -> inv.getArgument(0));
-        when(userMapper.toDomain(any(UserEntity.class))).thenReturn(domain);
+        when(userMapper.entityToDomain(any(UserEntity.class))).thenReturn(domain);
 
         User result = userPersistence.saveDomain(domain);
 
@@ -152,7 +152,7 @@ class UserPersistenceTest {
         verify(userMapper).updateEntityFromDomain(eq(domain), any(UserEntity.class));
         verify(roleRepository).findById(10L);
         verify(userRepository).save(any(UserEntity.class));
-        verify(userMapper).toDomain(any(UserEntity.class));
+        verify(userMapper).entityToDomain(any(UserEntity.class));
     }
 
     @Test

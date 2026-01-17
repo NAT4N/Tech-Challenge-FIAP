@@ -53,7 +53,7 @@ class FindUsersUseCaseTest {
     @Test
     void execute_ShouldReturnAll_WhenNameIsNull() {
         when(userRepository.findAll()).thenReturn(List.of(userEntity));
-        when(userMapper.toDomain(userEntity)).thenReturn(userDomain);
+        when(userMapper.entityToDomain(userEntity)).thenReturn(userDomain);
         when(userMapper.toResponseDTO(userDomain)).thenReturn(userResponse);
 
         List<UserResponseDTO> result = useCase.execute(null);
@@ -64,14 +64,14 @@ class FindUsersUseCaseTest {
 
         verify(userRepository).findAll();
         verify(userRepository, never()).findByNameContainingIgnoreCase(anyString());
-        verify(userMapper).toDomain(userEntity);
+        verify(userMapper).entityToDomain(userEntity);
         verify(userMapper).toResponseDTO(userDomain);
     }
 
     @Test
     void execute_ShouldReturnAll_WhenNameIsBlank() {
         when(userRepository.findAll()).thenReturn(List.of(userEntity));
-        when(userMapper.toDomain(userEntity)).thenReturn(userDomain);
+        when(userMapper.entityToDomain(userEntity)).thenReturn(userDomain);
         when(userMapper.toResponseDTO(userDomain)).thenReturn(userResponse);
 
         List<UserResponseDTO> result = useCase.execute("   ");
@@ -86,7 +86,7 @@ class FindUsersUseCaseTest {
     @Test
     void execute_ShouldFilterByName_WhenNameProvided() {
         when(userRepository.findByNameContainingIgnoreCase("John")).thenReturn(List.of(userEntity));
-        when(userMapper.toDomain(userEntity)).thenReturn(userDomain);
+        when(userMapper.entityToDomain(userEntity)).thenReturn(userDomain);
         when(userMapper.toResponseDTO(userDomain)).thenReturn(userResponse);
 
         List<UserResponseDTO> result = useCase.execute("John");
@@ -97,7 +97,7 @@ class FindUsersUseCaseTest {
 
         verify(userRepository, never()).findAll();
         verify(userRepository).findByNameContainingIgnoreCase("John");
-        verify(userMapper).toDomain(userEntity);
+        verify(userMapper).entityToDomain(userEntity);
         verify(userMapper).toResponseDTO(userDomain);
     }
 

@@ -18,7 +18,7 @@ public class FindRoleByIdUseCase {
     @Transactional(readOnly = true)
     public RoleResponseDTO execute(Long id) {
         return roleRepository.findById(id)
-                .map(roleMapper::toDomain)
+                .map(roleMapper::entityToDomain)
                 .map(roleMapper::toResponseDTO)
                 .orElseThrow(() -> new RoleException("Tipo de usuário não encontrado com o ID: " + id));
     }

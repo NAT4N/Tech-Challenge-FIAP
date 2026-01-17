@@ -34,6 +34,6 @@ public class UpdateRoleUseCase {
         entity.setName(name);
 
         RoleEntity saved = roleRepository.save(entity);
-        return roleMapper.toResponseDTO(roleMapper.toDomain(saved));
+        return roleMapper.toResponseDTO(roleMapper.entityToDomain(saved));
     }
 }

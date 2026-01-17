@@ -49,7 +49,7 @@ class FindAllRolesUseCaseTest {
     @Test
     void execute_ShouldReturnAllRolesMapped_WhenRolesExist() {
         when(roleRepository.findAll()).thenReturn(List.of(roleEntity));
-        when(roleMapper.toDomain(roleEntity)).thenReturn(roleDomain);
+        when(roleMapper.entityToDomain(roleEntity)).thenReturn(roleDomain);
         when(roleMapper.toResponseDTO(roleDomain)).thenReturn(roleResponse);
 
         List<RoleResponseDTO> result = useCase.execute();
@@ -60,7 +60,7 @@ class FindAllRolesUseCaseTest {
         assertEquals("CLIENT", result.getFirst().name());
 
         verify(roleRepository).findAll();
-        verify(roleMapper).toDomain(roleEntity);
+        verify(roleMapper).entityToDomain(roleEntity);
         verify(roleMapper).toResponseDTO(roleDomain);
     }
 

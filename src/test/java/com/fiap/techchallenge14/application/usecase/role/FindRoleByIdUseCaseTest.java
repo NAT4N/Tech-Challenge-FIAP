@@ -50,7 +50,7 @@ class FindRoleByIdUseCaseTest {
     @Test
     void execute_ShouldReturnRole_WhenFound() {
         when(roleRepository.findById(1L)).thenReturn(Optional.of(roleEntity));
-        when(roleMapper.toDomain(roleEntity)).thenReturn(roleDomain);
+        when(roleMapper.entityToDomain(roleEntity)).thenReturn(roleDomain);
         when(roleMapper.toResponseDTO(roleDomain)).thenReturn(roleResponse);
 
         RoleResponseDTO result = useCase.execute(1L);
@@ -60,7 +60,7 @@ class FindRoleByIdUseCaseTest {
         assertEquals("CLIENT", result.name());
 
         verify(roleRepository).findById(1L);
-        verify(roleMapper).toDomain(roleEntity);
+        verify(roleMapper).entityToDomain(roleEntity);
         verify(roleMapper).toResponseDTO(roleDomain);
     }
 

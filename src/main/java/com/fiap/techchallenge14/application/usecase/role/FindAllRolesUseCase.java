@@ -19,7 +19,7 @@ public class FindAllRolesUseCase {
     @Transactional(readOnly = true)
     public List<RoleResponseDTO> execute() {
         return roleRepository.findAll().stream()
-                .map(roleMapper::toDomain)
+                .map(roleMapper::entityToDomain)
                 .map(roleMapper::toResponseDTO)
                 .toList();
     }

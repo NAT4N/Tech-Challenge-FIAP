@@ -14,7 +14,7 @@ public interface RoleMapper {
 
     RoleResponseDTO toResponseDTO(Role role);
 
-    Role toDomain(RoleEntity entity);
+    Role entityToDomain(RoleEntity entity);
 
     RoleEntity toEntity(Role domain);
 }

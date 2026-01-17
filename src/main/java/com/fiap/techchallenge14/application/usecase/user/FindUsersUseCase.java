@@ -24,7 +24,7 @@ public class FindUsersUseCase {
                 : userRepository.findByNameContainingIgnoreCase(name);
 
         var users = entities.stream()
-                .map(userMapper::toDomain)
+                .map(userMapper::entityToDomain)
                 .map(userMapper::toResponseDTO)
                 .toList();
 

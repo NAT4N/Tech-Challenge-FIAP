@@ -56,7 +56,7 @@ class UpdateRoleUseCaseTest {
         when(roleRepository.findById(1L)).thenReturn(Optional.of(existingEntity));
         when(roleRepository.existsByNameAndIdNot("NEW", 1L)).thenReturn(false);
         when(roleRepository.save(existingEntity)).thenReturn(existingEntity);
-        when(roleMapper.toDomain(existingEntity)).thenReturn(domain);
+        when(roleMapper.entityToDomain(existingEntity)).thenReturn(domain);
         when(roleMapper.toResponseDTO(domain)).thenReturn(response);
 
         RoleResponseDTO result = useCase.execute(1L, dto);
@@ -69,7 +69,7 @@ class UpdateRoleUseCaseTest {
         verify(roleRepository).findById(1L);
         verify(roleRepository).existsByNameAndIdNot("NEW", 1L);
         verify(roleRepository).save(existingEntity);
-        verify(roleMapper).toDomain(existingEntity);
+        verify(roleMapper).entityToDomain(existingEntity);
         verify(roleMapper).toResponseDTO(domain);
     }
 

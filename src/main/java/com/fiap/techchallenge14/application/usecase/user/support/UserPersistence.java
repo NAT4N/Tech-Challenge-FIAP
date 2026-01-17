@@ -20,7 +20,7 @@ public class UserPersistence {
 
     public User findDomainByIdOrThrow(Long id) {
         return userRepository.findById(id)
-                .map(userMapper::toDomain)
+                .map(userMapper::entityToDomain)
                 .orElseThrow(() ->
                         new UserException("Usuário não encontrado com o ID: " + id)
                 );
@@ -42,6 +42,6 @@ public class UserPersistence {
         entity.setRole(role);
 
         UserEntity saved = userRepository.save(entity);
-        return userMapper.toDomain(saved);
+        return userMapper.entityToDomain(saved);
     }
 }

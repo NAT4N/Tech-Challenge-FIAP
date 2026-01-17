@@ -55,7 +55,7 @@ class CreateRoleUseCaseTest {
 
         when(roleMapper.toEntity(any(Role.class))).thenReturn(toSave);
         when(roleRepository.save(toSave)).thenReturn(savedEntity);
-        when(roleMapper.toDomain(savedEntity)).thenReturn(savedDomain);
+        when(roleMapper.entityToDomain(savedEntity)).thenReturn(savedDomain);
         when(roleMapper.toResponseDTO(savedDomain)).thenReturn(responseDTO);
 
         RoleResponseDTO result = useCase.execute(dto);
@@ -64,7 +64,7 @@ class CreateRoleUseCaseTest {
         assertEquals(1L, result.id());
         assertEquals("CLIENT", result.name());
         verify(roleRepository).save(toSave);
-        verify(roleMapper).toDomain(savedEntity);
+        verify(roleMapper).entityToDomain(savedEntity);
         verify(roleMapper).toResponseDTO(savedDomain);
     }
 }
