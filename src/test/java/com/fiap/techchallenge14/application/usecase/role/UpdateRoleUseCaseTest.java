@@ -85,7 +85,6 @@ class UpdateRoleUseCaseTest {
         verify(roleRepository).findById(1L);
         verify(roleRepository, never()).save(any());
         verifyNoInteractions(roleMapper);
-        verifyNoInteractions(roleMapper);
     }
 
     @Test
@@ -101,7 +100,6 @@ class UpdateRoleUseCaseTest {
         verify(roleRepository).findById(1L);
         verify(roleRepository).existsByNameAndIdNot("ADMIN", 1L);
         verify(roleRepository, never()).save(any());
-        verifyNoInteractions(roleMapper);
         verifyNoInteractions(roleMapper);
     }
 }

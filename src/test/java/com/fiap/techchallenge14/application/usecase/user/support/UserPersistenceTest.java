@@ -168,6 +168,6 @@ class UserPersistenceTest {
         verify(roleRepository).findById(10L);
 
         verify(userRepository, never()).save(any());
-        verify(userMapper, never()).toDomain((UserCreateRequestDTO) any());
+        verify(userMapper, never()).entityToDomain(any());
     }
 }

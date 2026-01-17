@@ -75,6 +75,5 @@ class FindAllRolesUseCaseTest {
 
         verify(roleRepository).findAll();
         verifyNoInteractions(roleMapper);
-        verifyNoInteractions(roleMapper);
     }
 }
