@@ -4,7 +4,6 @@ import com.fiap.techchallenge14.domain.model.Role;
 import com.fiap.techchallenge14.infrastructure.dto.RoleRequestDTO;
 import com.fiap.techchallenge14.infrastructure.dto.RoleResponseDTO;
 import com.fiap.techchallenge14.infrastructure.entity.RoleEntity;
-import com.fiap.techchallenge14.infrastructure.exception.RoleException;
 import com.fiap.techchallenge14.infrastructure.mapper.RoleEntityMapper;
 import com.fiap.techchallenge14.infrastructure.mapper.RoleMapper;
 import com.fiap.techchallenge14.infrastructure.repository.RoleRepository;
@@ -15,8 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -52,10 +51,8 @@ class CreateRoleUseCaseTest {
     }
 
     @Test
-    void execute_ShouldCreateRole_WhenNameDoesNotExist() {
+    void execute_ShouldCreateRole_TrimmingName() {
         RoleRequestDTO dto = new RoleRequestDTO("  CLIENT  ");
-
-        when(roleRepository.existsByName("CLIENT")).thenReturn(false);
 
         RoleEntity toSave = new RoleEntity();
         toSave.setName("CLIENT");
@@ -70,36 +67,8 @@ class CreateRoleUseCaseTest {
         assertNotNull(result);
         assertEquals(1L, result.id());
         assertEquals("CLIENT", result.name());
-
-        verify(roleRepository).existsByName("CLIENT");
-        verify(roleEntityMapper).toEntity(any(Role.class));
         verify(roleRepository).save(toSave);
         verify(roleEntityMapper).toDomain(savedEntity);
         verify(roleMapper).toResponseDTO(savedDomain);
-    }
-
-    @Test
-    void execute_ShouldThrowRoleException_WhenNameAlreadyExists() {
-        RoleRequestDTO dto = new RoleRequestDTO("  CLIENT  ");
-
-        when(roleRepository.existsByName("CLIENT")).thenReturn(true);
-
-        RoleException ex = assertThrows(RoleException.class, () -> useCase.execute(dto));
-        assertTrue(ex.getMessage().contains("Já existe um tipo de usuário com esse nome: CLIENT"));
-
-        verify(roleRepository).existsByName("CLIENT");
-        verify(roleRepository, never()).save(any());
-        verifyNoInteractions(roleMapper);
-        verifyNoInteractions(roleEntityMapper);
-    }
-
-    @Test
-    void execute_ShouldCallExistsByName_WithTrimmedName() {
-        RoleRequestDTO dto = new RoleRequestDTO("   ADMIN   ");
-        when(roleRepository.existsByName("ADMIN")).thenReturn(true);
-
-        assertThrows(RoleException.class, () -> useCase.execute(dto));
-
-        verify(roleRepository).existsByName("ADMIN");
     }
 }

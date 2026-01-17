@@ -4,7 +4,6 @@ import com.fiap.techchallenge14.domain.model.Role;
 import com.fiap.techchallenge14.infrastructure.dto.RoleRequestDTO;
 import com.fiap.techchallenge14.infrastructure.dto.RoleResponseDTO;
 import com.fiap.techchallenge14.infrastructure.entity.RoleEntity;
-import com.fiap.techchallenge14.infrastructure.exception.RoleException;
 import com.fiap.techchallenge14.infrastructure.mapper.RoleEntityMapper;
 import com.fiap.techchallenge14.infrastructure.mapper.RoleMapper;
 import com.fiap.techchallenge14.infrastructure.repository.RoleRepository;
@@ -24,12 +23,7 @@ public class CreateRoleUseCase {
 
     @Transactional
     public RoleResponseDTO execute(RoleRequestDTO dto) {
-
         String name = dto.name().trim();
-
-        if (roleRepository.existsByName(name)) {
-            throw new RoleException("Já existe um tipo de usuário com esse nome: " + name);
-        }
 
         Role domain = new Role();
         domain.setName(name);
