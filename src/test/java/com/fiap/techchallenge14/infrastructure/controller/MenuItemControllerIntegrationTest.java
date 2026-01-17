@@ -1,40 +1,42 @@
 package com.fiap.techchallenge14.infrastructure.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fiap.techchallenge14.infrastructure.dto.RestaurantCreateRequestDTO;
-import com.fiap.techchallenge14.infrastructure.dto.RestaurantResponseDTO;
-import com.fiap.techchallenge14.infrastructure.dto.RestaurantUpdateRequestDTO;
-import com.fiap.techchallenge14.infrastructure.dto.UserCreateRequestDTO;
+import com.fiap.techchallenge14.infrastructure.dto.*;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Transactional
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-class RestaurantControllerIntegrationTest {
+@Transactional
+class MenuItemControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     private Long userId;
 
@@ -79,67 +81,105 @@ class RestaurantControllerIntegrationTest {
 
         restaurantId = objectMapper.readTree(responseRestaurante).get("id").asLong();
 
-    }
-
-    @Test
-    void shouldCreateAndFindRestaurant() throws Exception {
-
-        RestaurantCreateRequestDTO request = new RestaurantCreateRequestDTO(
-                "Restaurante Bom",
-                "Avenida Paulista, 1000",
-                "Cozinha Brasileira",
-                "08:00 às 22:00",
-                1L
+        MenuItemCreateRequestDTO requestItem = new MenuItemCreateRequestDTO(
+                "Pizza",
+                "Pizza de calabresa",
+                new BigDecimal("29.90"),
+                false,
+                "/images/pizza.jpg",
+                restaurantId
         );
 
-        String response = mockMvc.perform(post("/v1/restaurants")
+        mockMvc.perform(post("/v1/menu-items")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .content(objectMapper.writeValueAsString(requestItem)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name").value("Restaurante Bom"))
+                .andExpect(jsonPath("$.name").value("Pizza"))
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
 
-        RestaurantResponseDTO dto =
-                objectMapper.readValue(response, RestaurantResponseDTO.class);
-
-        mockMvc.perform(get("/v1/restaurants/" + dto.id()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Restaurante Bom"));
     }
 
     @Test
-    void shouldUpdateRestaurant() throws Exception {
+    void shouldCreateAndFindMenuItem() throws Exception {
 
-        RestaurantUpdateRequestDTO update = new RestaurantUpdateRequestDTO(
-                "Restaurante Atualizado",
-                "Rua Nova, 456",
-                "Japonesa",
-                "11:00 às 23:00",
-                1L
+        MenuItemCreateRequestDTO request = new MenuItemCreateRequestDTO(
+                "Pizza",
+                "Pizza de calabresa",
+                new BigDecimal("29.90"),
+                false,
+                "/images/pizza.jpg",
+                restaurantId
         );
 
-        mockMvc.perform(patch("/v1/restaurants/" + restaurantId)
+        String response = mockMvc.perform(post("/v1/menu-items")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").value("Pizza"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        MenuItemResponseDTO dto = objectMapper.readValue(response, MenuItemResponseDTO.class);
+
+        mockMvc.perform(get("/v1/menu-items/" + dto.id()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Pizza"));
+    }
+
+    @Test
+    void shouldFindMenuItemByRestaurant() throws Exception {
+        String response = mockMvc.perform(get("/v1/menu-items/restaurant/" + restaurantId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1)).toString();
+    }
+
+    @Test
+    void shouldUpdateMenuItem() throws Exception {
+
+        Long id = createMenuItem();
+
+        MenuItemUpdateRequestDTO update = new MenuItemUpdateRequestDTO(
+                "Pizza Atualizada",
+                null,
+                null,
+                null,
+                null
+        );
+
+        mockMvc.perform(patch("/v1/menu-items/" + id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(update)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Restaurante Atualizado"));
+                .andExpect(jsonPath("$.name").value("Pizza Atualizada"));
     }
 
-
     @Test
-    void shouldDeleteRestaurant() throws Exception {
+    void shouldDeleteMenuItem() throws Exception {
 
-        RestaurantCreateRequestDTO create = new RestaurantCreateRequestDTO(
-                "Restaurante Delete",
-                "Rua Delete",
-                "Cozinha X",
-                "09:00 às 18:00",
-                1L
+        Long id = createMenuItem();
+
+        mockMvc.perform(delete("/v1/menu-items/" + id))
+                .andExpect(status().isNoContent());
+
+        mockMvc.perform(get("/v1/menu-items/" + id))
+                .andExpect(status().isBadRequest());
+    }
+
+    private Long createMenuItem() throws Exception {
+        MenuItemCreateRequestDTO create = new MenuItemCreateRequestDTO(
+                "Pizza",
+                "Pizza de calabresa",
+                new BigDecimal("29.90"),
+                false,
+                "/images/pizza.jpg",
+                restaurantId
         );
 
-        String response = mockMvc.perform(post("/v1/restaurants")
+        String response = mockMvc.perform(post("/v1/menu-items")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(create)))
                 .andExpect(status().isCreated())
@@ -147,20 +187,8 @@ class RestaurantControllerIntegrationTest {
                 .getResponse()
                 .getContentAsString();
 
-        RestaurantResponseDTO dto =
-                objectMapper.readValue(response, RestaurantResponseDTO.class);
-
-        mockMvc.perform(delete("/v1/restaurants/" + dto.id()))
-                .andExpect(status().isNoContent());
-
-        mockMvc.perform(get("/v1/restaurants/" + dto.id()))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void shouldFindAllRestaurants() throws Exception {
-        mockMvc.perform(get("/v1/restaurants"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(1));
+        MenuItemResponseDTO dto = objectMapper.readValue(response, MenuItemResponseDTO.class);
+        return dto.id();
     }
 }
+

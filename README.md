@@ -61,6 +61,16 @@ docker compose up -d
 | **PATCH**  | `/v1/users/{id}`          | Atualiza parcialmente os dados de um usuário | Sim          |
 | **PATCH**  | `/v1/users/{id}/password` | Altera a senha de um usuário                 | Sim          |
 | **DELETE** | `/v1/users/{id}`          | Remove um usuário pelo ID                    | Sim          |
+| **POST**   | `/v1/menu-items`          | Cria um novo item no cardápio                | Sim          |
+| **PATCH**  | `/v1/menu-items/{id}`     | Atualiza parcialmente um item do cardápio    | Sim          |
+| **DELETE** | `/v1/menu-items/{id}`     | Remove um item do cardápio                   | Sim          |
+| **GET**    | `/v1/menu-items/{id}`     | Busca um item do cardápio pelo ID            | Sim          |
+| **GET**    | `/v1/menu-items/restaurant/{restaurantId}` | Lista todos os itens de um restaurante | Sim |
+| **POST**   | `/v1/restaurants`         | Cria um novo restaurante                     | Sim          |
+| **PATCH**  | `/v1/restaurants/{id}`    | Atualiza parcialmente um restaurante         | Sim          |
+| **DELETE** | `/v1/restaurants/{id}`    | Remove um restaurante pelo ID                | Sim          |
+| **GET**    | `/v1/restaurants`         | Lista todos os restaurantes                  | Sim          |
+| **GET**    | `/v1/restaurants/{id}`    | Busca um restaurante pelo ID                 | Sim          |
 
 > 💡 **Nota:**  
 > Para acessar os endpoints que requerem autenticação (`Sim` na coluna “Autenticação”), siga os passos abaixo:
