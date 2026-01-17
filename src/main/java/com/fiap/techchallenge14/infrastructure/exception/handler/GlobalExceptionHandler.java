@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(LoginException.class)
     public ProblemDetail handleLoginException(RuntimeException ex) {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
-        problem.setTitle("Erro de Usuário");
+        problem.setTitle("Erro de Login");
         problem.setType(URI.create("/problems/login-error"));
         return problem;
     }
