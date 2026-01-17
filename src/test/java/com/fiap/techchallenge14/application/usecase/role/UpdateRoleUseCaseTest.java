@@ -5,7 +5,6 @@ import com.fiap.techchallenge14.infrastructure.dto.RoleRequestDTO;
 import com.fiap.techchallenge14.infrastructure.dto.RoleResponseDTO;
 import com.fiap.techchallenge14.infrastructure.entity.RoleEntity;
 import com.fiap.techchallenge14.infrastructure.exception.RoleException;
-import com.fiap.techchallenge14.infrastructure.mapper.RoleEntityMapper;
 import com.fiap.techchallenge14.infrastructure.mapper.RoleMapper;
 import com.fiap.techchallenge14.infrastructure.repository.RoleRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,9 +28,6 @@ class UpdateRoleUseCaseTest {
 
     @Mock
     private RoleMapper roleMapper;
-
-    @Mock
-    private RoleEntityMapper roleEntityMapper;
 
     @InjectMocks
     private UpdateRoleUseCase useCase;
@@ -60,7 +56,7 @@ class UpdateRoleUseCaseTest {
         when(roleRepository.findById(1L)).thenReturn(Optional.of(existingEntity));
         when(roleRepository.existsByNameAndIdNot("NEW", 1L)).thenReturn(false);
         when(roleRepository.save(existingEntity)).thenReturn(existingEntity);
-        when(roleEntityMapper.toDomain(existingEntity)).thenReturn(domain);
+        when(roleMapper.toDomain(existingEntity)).thenReturn(domain);
         when(roleMapper.toResponseDTO(domain)).thenReturn(response);
 
         RoleResponseDTO result = useCase.execute(1L, dto);
@@ -73,7 +69,7 @@ class UpdateRoleUseCaseTest {
         verify(roleRepository).findById(1L);
         verify(roleRepository).existsByNameAndIdNot("NEW", 1L);
         verify(roleRepository).save(existingEntity);
-        verify(roleEntityMapper).toDomain(existingEntity);
+        verify(roleMapper).toDomain(existingEntity);
         verify(roleMapper).toResponseDTO(domain);
     }
 
@@ -88,7 +84,7 @@ class UpdateRoleUseCaseTest {
 
         verify(roleRepository).findById(1L);
         verify(roleRepository, never()).save(any());
-        verifyNoInteractions(roleEntityMapper);
+        verifyNoInteractions(roleMapper);
         verifyNoInteractions(roleMapper);
     }
 
@@ -105,7 +101,7 @@ class UpdateRoleUseCaseTest {
         verify(roleRepository).findById(1L);
         verify(roleRepository).existsByNameAndIdNot("ADMIN", 1L);
         verify(roleRepository, never()).save(any());
-        verifyNoInteractions(roleEntityMapper);
+        verifyNoInteractions(roleMapper);
         verifyNoInteractions(roleMapper);
     }
 }

@@ -4,7 +4,6 @@ import com.fiap.techchallenge14.domain.model.Role;
 import com.fiap.techchallenge14.infrastructure.dto.RoleResponseDTO;
 import com.fiap.techchallenge14.infrastructure.entity.RoleEntity;
 import com.fiap.techchallenge14.infrastructure.exception.RoleException;
-import com.fiap.techchallenge14.infrastructure.mapper.RoleEntityMapper;
 import com.fiap.techchallenge14.infrastructure.mapper.RoleMapper;
 import com.fiap.techchallenge14.infrastructure.repository.RoleRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,9 +23,6 @@ class FindRoleByIdUseCaseTest {
 
     @Mock
     private RoleRepository roleRepository;
-
-    @Mock
-    private RoleEntityMapper roleEntityMapper;
 
     @Mock
     private RoleMapper roleMapper;
@@ -54,7 +50,7 @@ class FindRoleByIdUseCaseTest {
     @Test
     void execute_ShouldReturnRole_WhenFound() {
         when(roleRepository.findById(1L)).thenReturn(Optional.of(roleEntity));
-        when(roleEntityMapper.toDomain(roleEntity)).thenReturn(roleDomain);
+        when(roleMapper.toDomain(roleEntity)).thenReturn(roleDomain);
         when(roleMapper.toResponseDTO(roleDomain)).thenReturn(roleResponse);
 
         RoleResponseDTO result = useCase.execute(1L);
@@ -64,7 +60,7 @@ class FindRoleByIdUseCaseTest {
         assertEquals("CLIENT", result.name());
 
         verify(roleRepository).findById(1L);
-        verify(roleEntityMapper).toDomain(roleEntity);
+        verify(roleMapper).toDomain(roleEntity);
         verify(roleMapper).toResponseDTO(roleDomain);
     }
 
@@ -76,7 +72,7 @@ class FindRoleByIdUseCaseTest {
         assertTrue(ex.getMessage().contains("Tipo de usuário não encontrado com o ID: 99"));
 
         verify(roleRepository).findById(99L);
-        verifyNoInteractions(roleEntityMapper);
+        verifyNoInteractions(roleMapper);
         verifyNoInteractions(roleMapper);
     }
 }

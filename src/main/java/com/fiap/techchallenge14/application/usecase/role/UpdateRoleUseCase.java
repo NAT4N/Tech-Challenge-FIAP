@@ -4,7 +4,6 @@ import com.fiap.techchallenge14.infrastructure.dto.RoleRequestDTO;
 import com.fiap.techchallenge14.infrastructure.dto.RoleResponseDTO;
 import com.fiap.techchallenge14.infrastructure.entity.RoleEntity;
 import com.fiap.techchallenge14.infrastructure.exception.RoleException;
-import com.fiap.techchallenge14.infrastructure.mapper.RoleEntityMapper;
 import com.fiap.techchallenge14.infrastructure.mapper.RoleMapper;
 import com.fiap.techchallenge14.infrastructure.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,6 @@ public class UpdateRoleUseCase {
 
     private final RoleRepository roleRepository;
     private final RoleMapper roleMapper;
-    private final RoleEntityMapper roleEntityMapper;
 
     @Transactional
     public RoleResponseDTO execute(Long id, RoleRequestDTO dto) {
@@ -36,6 +34,6 @@ public class UpdateRoleUseCase {
         entity.setName(name);
 
         RoleEntity saved = roleRepository.save(entity);
-        return roleMapper.toResponseDTO(roleEntityMapper.toDomain(saved));
+        return roleMapper.toResponseDTO(roleMapper.toDomain(saved));
     }
 }
