@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -18,7 +20,7 @@ public class ChangeUserPasswordUseCase {
     public void execute(Long id, String newPassword) {
         User user = userPersistence.findDomainByIdOrThrow(id);
         user.setPassword(newPassword);
-
+        user.setLastUpdatedAt(LocalDateTime.now());
         userPersistence.saveDomain(user);
         log.info("Senha atualizada no usuário com o ID: {}", id);
     }

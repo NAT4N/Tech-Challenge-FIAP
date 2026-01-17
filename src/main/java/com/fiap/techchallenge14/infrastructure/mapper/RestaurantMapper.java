@@ -20,6 +20,6 @@ public interface RestaurantMapper {
     RestaurantEntity toDomain(RestaurantCreateRequestDTO dto);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(source = "ownerId", target = "owner.id")
+    @Mapping(target = "owner", ignore = true)
     void updateDomainFromDto(RestaurantUpdateRequestDTO dto, @MappingTarget RestaurantEntity restaurantEntity);
 }
