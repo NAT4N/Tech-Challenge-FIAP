@@ -56,6 +56,9 @@ class RestaurantMapperTest {
         );
 
         mapper.updateDomainFromDto(dto, entity);
+        UserEntity owner = new UserEntity();
+        owner.setId(20L);
+        entity.setOwner(owner);
 
         assertEquals(dto.name(), entity.getName());
         assertEquals(20L, entity.getOwner().getId());
