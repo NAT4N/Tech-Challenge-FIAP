@@ -1,4 +1,4 @@
-package com.fiap.techchallenge14.application.usecase.user.support;
+package com.fiap.techchallenge14.application.usecase.user.helper;
 
 import com.fiap.techchallenge14.domain.model.User;
 import com.fiap.techchallenge14.infrastructure.entity.RoleEntity;

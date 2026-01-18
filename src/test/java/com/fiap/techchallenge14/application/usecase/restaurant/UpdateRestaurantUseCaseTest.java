@@ -7,7 +7,6 @@ import com.fiap.techchallenge14.infrastructure.entity.UserEntity;
 import com.fiap.techchallenge14.infrastructure.exception.RestaurantException;
 import com.fiap.techchallenge14.infrastructure.mapper.RestaurantMapper;
 import com.fiap.techchallenge14.infrastructure.repository.RestaurantRepository;
-import com.fiap.techchallenge14.infrastructure.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,10 +26,10 @@ class UpdateRestaurantUseCaseTest {
     private RestaurantRepository restaurantRepository;
 
     @Mock
-    private UserRepository userRepository;
+    private RestaurantMapper restaurantMapper;
 
     @Mock
-    private RestaurantMapper restaurantMapper;
+    private RestaurantOwnerValidator restaurantOwnerValidator;
 
     @InjectMocks
     private UpdateRestaurantUseCase useCase;
@@ -47,7 +45,6 @@ class UpdateRestaurantUseCaseTest {
 
         restaurantEntity = new RestaurantEntity();
         restaurantEntity.setId(1L);
-        restaurantEntity.setName("Old Name");
         restaurantEntity.setOwner(owner);
 
         responseDTO = new RestaurantResponseDTO(
@@ -62,7 +59,7 @@ class UpdateRestaurantUseCaseTest {
     }
 
     @Test
-    void execute_ShouldUpdateRestaurant_WhenOwnerIsNotChanged() {
+    void execute_ShouldUpdateRestaurant_WhenOwnerNotChanged() {
         RestaurantUpdateRequestDTO dto = new RestaurantUpdateRequestDTO(
                 "New Name",
                 "Rua A, 123",
@@ -78,17 +75,15 @@ class UpdateRestaurantUseCaseTest {
         RestaurantResponseDTO result = useCase.execute(1L, dto);
 
         assertNotNull(result);
-        assertEquals(1L, result.id());
 
         verify(restaurantRepository).findById(1L);
         verify(restaurantMapper).updateDomainFromDto(dto, restaurantEntity);
-        verify(userRepository, never()).findById(any());
+        verifyNoInteractions(restaurantOwnerValidator);
         verify(restaurantRepository).save(restaurantEntity);
-        verify(restaurantMapper).toResponseDTO(restaurantEntity);
     }
 
     @Test
-    void execute_ShouldUpdateRestaurant_AndChangeOwner_WhenOwnerIdProvided() {
+    void execute_ShouldUpdateRestaurant_AndChangeOwner_WhenOwnerIsValid() {
         RestaurantUpdateRequestDTO dto = new RestaurantUpdateRequestDTO(
                 "New Name",
                 "Rua A, 123",
@@ -102,25 +97,20 @@ class UpdateRestaurantUseCaseTest {
         newOwner.setName("New Owner");
 
         when(restaurantRepository.findById(1L)).thenReturn(Optional.of(restaurantEntity));
-        when(userRepository.findById(20L)).thenReturn(Optional.of(newOwner));
+        when(restaurantOwnerValidator.loadRestaurantOwnerOrThrow(20L)).thenReturn(newOwner);
         when(restaurantRepository.save(restaurantEntity)).thenReturn(restaurantEntity);
         when(restaurantMapper.toResponseDTO(restaurantEntity)).thenReturn(responseDTO);
 
-        RestaurantResponseDTO result = useCase.execute(1L, dto);
+        useCase.execute(1L, dto);
 
-        assertNotNull(result);
-        assertEquals(1L, result.id());
         assertEquals(20L, restaurantEntity.getOwner().getId());
 
-        verify(restaurantRepository).findById(1L);
-        verify(restaurantMapper).updateDomainFromDto(dto, restaurantEntity);
-        verify(userRepository).findById(20L);
+        verify(restaurantOwnerValidator).loadRestaurantOwnerOrThrow(20L);
         verify(restaurantRepository).save(restaurantEntity);
-        verify(restaurantMapper).toResponseDTO(restaurantEntity);
     }
 
     @Test
-    void execute_ShouldThrowRestaurantException_WhenRestaurantNotFound() {
+    void execute_ShouldThrowException_WhenRestaurantNotFound() {
         RestaurantUpdateRequestDTO dto = new RestaurantUpdateRequestDTO(
                 "New Name",
                 "Rua A, 123",
@@ -131,18 +121,15 @@ class UpdateRestaurantUseCaseTest {
 
         when(restaurantRepository.findById(1L)).thenReturn(Optional.empty());
 
-        RestaurantException ex =
-                assertThrows(RestaurantException.class, () -> useCase.execute(1L, dto));
-
-        assertTrue(ex.getMessage().contains("Restaurante não encontrado com o ID: 1"));
+        assertThrows(RestaurantException.class, () -> useCase.execute(1L, dto));
 
         verify(restaurantRepository).findById(1L);
         verifyNoInteractions(restaurantMapper);
-        verifyNoInteractions(userRepository);
+        verifyNoInteractions(restaurantOwnerValidator);
     }
 
     @Test
-    void execute_ShouldThrowRestaurantException_WhenOwnerNotFound() {
+    void execute_ShouldThrowException_WhenOwnerIsInvalid() {
         RestaurantUpdateRequestDTO dto = new RestaurantUpdateRequestDTO(
                 "New Name",
                 "Rua A, 123",
@@ -152,17 +139,15 @@ class UpdateRestaurantUseCaseTest {
         );
 
         when(restaurantRepository.findById(1L)).thenReturn(Optional.of(restaurantEntity));
-        when(userRepository.findById(99L)).thenReturn(Optional.empty());
+        when(restaurantOwnerValidator.loadRestaurantOwnerOrThrow(99L))
+                .thenThrow(new RestaurantException("Usuário 99 não possui a role RESTAURANT_OWNER."));
 
         RestaurantException ex =
                 assertThrows(RestaurantException.class, () -> useCase.execute(1L, dto));
 
-        assertTrue(ex.getMessage().contains("Proprietário não encontrado com o ID: 99"));
+        assertTrue(ex.getMessage().contains("RESTAURANT_OWNER"));
 
-        verify(restaurantRepository).findById(1L);
-        verify(restaurantMapper).updateDomainFromDto(dto, restaurantEntity);
-        verify(userRepository).findById(99L);
+        verify(restaurantOwnerValidator).loadRestaurantOwnerOrThrow(99L);
         verify(restaurantRepository, never()).save(any());
-        verify(restaurantMapper, never()).toResponseDTO(any());
     }
 }

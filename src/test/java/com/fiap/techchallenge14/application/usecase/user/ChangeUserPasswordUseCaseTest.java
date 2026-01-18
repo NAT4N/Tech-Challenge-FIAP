@@ -1,6 +1,6 @@
 package com.fiap.techchallenge14.application.usecase.user;
 
-import com.fiap.techchallenge14.application.usecase.user.support.UserPersistence;
+import com.fiap.techchallenge14.application.usecase.user.helper.UserPersistence;
 import com.fiap.techchallenge14.domain.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

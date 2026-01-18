@@ -4,7 +4,6 @@ import com.fiap.techchallenge14.infrastructure.dto.MenuItemCreateRequestDTO;
 import com.fiap.techchallenge14.infrastructure.dto.MenuItemResponseDTO;
 import com.fiap.techchallenge14.infrastructure.entity.MenuItemEntity;
 import com.fiap.techchallenge14.infrastructure.entity.RestaurantEntity;
-import com.fiap.techchallenge14.infrastructure.exception.MenuItemException;
 import com.fiap.techchallenge14.infrastructure.exception.RestaurantException;
 import com.fiap.techchallenge14.infrastructure.mapper.MenuItemMapper;
 import com.fiap.techchallenge14.infrastructure.repository.MenuItemRepository;
