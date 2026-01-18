@@ -3,6 +3,7 @@ package com.fiap.techchallenge14.infrastructure.mapper;
 import com.fiap.techchallenge14.domain.model.Role;
 import com.fiap.techchallenge14.infrastructure.dto.RoleRequestDTO;
 import com.fiap.techchallenge14.infrastructure.dto.RoleResponseDTO;
+import com.fiap.techchallenge14.infrastructure.entity.RoleEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
@@ -12,4 +13,8 @@ public interface RoleMapper {
     Role toDomain(RoleRequestDTO dto);
 
     RoleResponseDTO toResponseDTO(Role role);
+
+    Role entityToDomain(RoleEntity entity);
+
+    RoleEntity toEntity(Role domain);
 }

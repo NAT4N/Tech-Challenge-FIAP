@@ -4,7 +4,6 @@ import com.fiap.techchallenge14.domain.model.Role;
 import com.fiap.techchallenge14.infrastructure.dto.RoleRequestDTO;
 import com.fiap.techchallenge14.infrastructure.dto.RoleResponseDTO;
 import com.fiap.techchallenge14.infrastructure.entity.RoleEntity;
-import com.fiap.techchallenge14.infrastructure.mapper.RoleEntityMapper;
 import com.fiap.techchallenge14.infrastructure.mapper.RoleMapper;
 import com.fiap.techchallenge14.infrastructure.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,6 @@ public class CreateRoleUseCase {
 
     private final RoleRepository roleRepository;
     private final RoleMapper roleMapper;
-    private final RoleEntityMapper roleEntityMapper;
 
     @Transactional
     public RoleResponseDTO execute(RoleRequestDTO dto) {
@@ -28,9 +26,9 @@ public class CreateRoleUseCase {
         Role domain = new Role();
         domain.setName(name);
 
-        RoleEntity entity = roleEntityMapper.toEntity(domain);
+        RoleEntity entity = roleMapper.toEntity(domain);
         RoleEntity saved = roleRepository.save(entity);
 
-        return roleMapper.toResponseDTO(roleEntityMapper.toDomain(saved));
+        return roleMapper.toResponseDTO(roleMapper.entityToDomain(saved));
     }
 }

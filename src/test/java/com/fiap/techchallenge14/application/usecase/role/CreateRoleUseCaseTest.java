@@ -4,7 +4,6 @@ import com.fiap.techchallenge14.domain.model.Role;
 import com.fiap.techchallenge14.infrastructure.dto.RoleRequestDTO;
 import com.fiap.techchallenge14.infrastructure.dto.RoleResponseDTO;
 import com.fiap.techchallenge14.infrastructure.entity.RoleEntity;
-import com.fiap.techchallenge14.infrastructure.mapper.RoleEntityMapper;
 import com.fiap.techchallenge14.infrastructure.mapper.RoleMapper;
 import com.fiap.techchallenge14.infrastructure.repository.RoleRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,9 +25,6 @@ class CreateRoleUseCaseTest {
 
     @Mock
     private RoleMapper roleMapper;
-
-    @Mock
-    private RoleEntityMapper roleEntityMapper;
 
     @InjectMocks
     private CreateRoleUseCase useCase;
@@ -57,9 +53,9 @@ class CreateRoleUseCaseTest {
         RoleEntity toSave = new RoleEntity();
         toSave.setName("CLIENT");
 
-        when(roleEntityMapper.toEntity(any(Role.class))).thenReturn(toSave);
+        when(roleMapper.toEntity(any(Role.class))).thenReturn(toSave);
         when(roleRepository.save(toSave)).thenReturn(savedEntity);
-        when(roleEntityMapper.toDomain(savedEntity)).thenReturn(savedDomain);
+        when(roleMapper.entityToDomain(savedEntity)).thenReturn(savedDomain);
         when(roleMapper.toResponseDTO(savedDomain)).thenReturn(responseDTO);
 
         RoleResponseDTO result = useCase.execute(dto);
@@ -68,7 +64,7 @@ class CreateRoleUseCaseTest {
         assertEquals(1L, result.id());
         assertEquals("CLIENT", result.name());
         verify(roleRepository).save(toSave);
-        verify(roleEntityMapper).toDomain(savedEntity);
+        verify(roleMapper).entityToDomain(savedEntity);
         verify(roleMapper).toResponseDTO(savedDomain);
     }
 }

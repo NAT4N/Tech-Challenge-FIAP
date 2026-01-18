@@ -4,7 +4,6 @@ import com.fiap.techchallenge14.domain.model.User;
 import com.fiap.techchallenge14.infrastructure.dto.UserResponseDTO;
 import com.fiap.techchallenge14.infrastructure.entity.UserEntity;
 import com.fiap.techchallenge14.infrastructure.exception.UserException;
-import com.fiap.techchallenge14.infrastructure.mapper.UserEntityMapper;
 import com.fiap.techchallenge14.infrastructure.mapper.UserMapper;
 import com.fiap.techchallenge14.infrastructure.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,9 +23,6 @@ class FindUsersUseCaseTest {
 
     @Mock
     private UserRepository userRepository;
-
-    @Mock
-    private UserEntityMapper userEntityMapper;
 
     @Mock
     private UserMapper userMapper;
@@ -57,7 +53,7 @@ class FindUsersUseCaseTest {
     @Test
     void execute_ShouldReturnAll_WhenNameIsNull() {
         when(userRepository.findAll()).thenReturn(List.of(userEntity));
-        when(userEntityMapper.toDomain(userEntity)).thenReturn(userDomain);
+        when(userMapper.entityToDomain(userEntity)).thenReturn(userDomain);
         when(userMapper.toResponseDTO(userDomain)).thenReturn(userResponse);
 
         List<UserResponseDTO> result = useCase.execute(null);
@@ -68,14 +64,14 @@ class FindUsersUseCaseTest {
 
         verify(userRepository).findAll();
         verify(userRepository, never()).findByNameContainingIgnoreCase(anyString());
-        verify(userEntityMapper).toDomain(userEntity);
+        verify(userMapper).entityToDomain(userEntity);
         verify(userMapper).toResponseDTO(userDomain);
     }
 
     @Test
     void execute_ShouldReturnAll_WhenNameIsBlank() {
         when(userRepository.findAll()).thenReturn(List.of(userEntity));
-        when(userEntityMapper.toDomain(userEntity)).thenReturn(userDomain);
+        when(userMapper.entityToDomain(userEntity)).thenReturn(userDomain);
         when(userMapper.toResponseDTO(userDomain)).thenReturn(userResponse);
 
         List<UserResponseDTO> result = useCase.execute("   ");
@@ -90,7 +86,7 @@ class FindUsersUseCaseTest {
     @Test
     void execute_ShouldFilterByName_WhenNameProvided() {
         when(userRepository.findByNameContainingIgnoreCase("John")).thenReturn(List.of(userEntity));
-        when(userEntityMapper.toDomain(userEntity)).thenReturn(userDomain);
+        when(userMapper.entityToDomain(userEntity)).thenReturn(userDomain);
         when(userMapper.toResponseDTO(userDomain)).thenReturn(userResponse);
 
         List<UserResponseDTO> result = useCase.execute("John");
@@ -101,7 +97,7 @@ class FindUsersUseCaseTest {
 
         verify(userRepository, never()).findAll();
         verify(userRepository).findByNameContainingIgnoreCase("John");
-        verify(userEntityMapper).toDomain(userEntity);
+        verify(userMapper).entityToDomain(userEntity);
         verify(userMapper).toResponseDTO(userDomain);
     }
 
@@ -114,7 +110,7 @@ class FindUsersUseCaseTest {
 
         verify(userRepository).findAll();
         verify(userRepository, never()).findByNameContainingIgnoreCase(anyString());
-        verifyNoInteractions(userEntityMapper);
+        verifyNoInteractions(userMapper);
         verifyNoInteractions(userMapper);
     }
 
@@ -128,7 +124,7 @@ class FindUsersUseCaseTest {
 
         verify(userRepository, never()).findAll();
         verify(userRepository).findByNameContainingIgnoreCase("John");
-        verifyNoInteractions(userEntityMapper);
+        verifyNoInteractions(userMapper);
         verifyNoInteractions(userMapper);
     }
 }

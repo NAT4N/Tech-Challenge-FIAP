@@ -2,7 +2,6 @@ package com.fiap.techchallenge14.application.usecase.user;
 
 import com.fiap.techchallenge14.infrastructure.dto.UserResponseDTO;
 import com.fiap.techchallenge14.infrastructure.exception.UserException;
-import com.fiap.techchallenge14.infrastructure.mapper.UserEntityMapper;
 import com.fiap.techchallenge14.infrastructure.mapper.UserMapper;
 import com.fiap.techchallenge14.infrastructure.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,6 @@ import java.util.List;
 public class FindUsersUseCase {
 
     private final UserRepository userRepository;
-    private final UserEntityMapper userEntityMapper;
     private final UserMapper userMapper;
 
     @Transactional(readOnly = true)
@@ -26,7 +24,7 @@ public class FindUsersUseCase {
                 : userRepository.findByNameContainingIgnoreCase(name);
 
         var users = entities.stream()
-                .map(userEntityMapper::toDomain)
+                .map(userMapper::entityToDomain)
                 .map(userMapper::toResponseDTO)
                 .toList();
 

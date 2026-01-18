@@ -99,6 +99,6 @@ class UserMapperTest {
 
     @Test
     void toDomain_WithNull_ShouldReturnNull() {
-        assertNull(mapper.toDomain(null));
+        assertNull(mapper.toDomain((UserCreateRequestDTO) null));
     }
 }

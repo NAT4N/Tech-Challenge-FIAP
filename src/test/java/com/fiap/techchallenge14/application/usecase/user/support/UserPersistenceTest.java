@@ -1,10 +1,11 @@
 package com.fiap.techchallenge14.application.usecase.user.support;
 
 import com.fiap.techchallenge14.domain.model.User;
+import com.fiap.techchallenge14.infrastructure.dto.UserCreateRequestDTO;
 import com.fiap.techchallenge14.infrastructure.entity.RoleEntity;
 import com.fiap.techchallenge14.infrastructure.entity.UserEntity;
 import com.fiap.techchallenge14.infrastructure.exception.UserException;
-import com.fiap.techchallenge14.infrastructure.mapper.UserEntityMapper;
+import com.fiap.techchallenge14.infrastructure.mapper.UserMapper;
 import com.fiap.techchallenge14.infrastructure.repository.RoleRepository;
 import com.fiap.techchallenge14.infrastructure.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +30,7 @@ class UserPersistenceTest {
     private RoleRepository roleRepository;
 
     @Mock
-    private UserEntityMapper userEntityMapper;
+    private UserMapper userMapper;
 
     @InjectMocks
     private UserPersistence userPersistence;
@@ -56,14 +57,14 @@ class UserPersistenceTest {
     @Test
     void findDomainByIdOrThrow_ShouldReturnDomain_WhenFound() {
         when(userRepository.findById(1L)).thenReturn(Optional.of(entity));
-        when(userEntityMapper.toDomain(entity)).thenReturn(domain);
+        when(userMapper.entityToDomain(entity)).thenReturn(domain);
 
         User result = userPersistence.findDomainByIdOrThrow(1L);
 
         assertNotNull(result);
         assertEquals(1L, result.getId());
         verify(userRepository).findById(1L);
-        verify(userEntityMapper).toDomain(entity);
+        verify(userMapper).entityToDomain(entity);
     }
 
     @Test
@@ -74,7 +75,7 @@ class UserPersistenceTest {
         assertTrue(ex.getMessage().contains("Usuário não encontrado com o ID: 1"));
 
         verify(userRepository).findById(1L);
-        verifyNoInteractions(userEntityMapper);
+        verifyNoInteractions(userMapper);
     }
 
     @Test
@@ -93,7 +94,7 @@ class UserPersistenceTest {
 
         when(roleRepository.findById(10L)).thenReturn(Optional.of(role));
         when(userRepository.save(any(UserEntity.class))).thenReturn(savedEntity);
-        when(userEntityMapper.toDomain(savedEntity)).thenReturn(savedDomain);
+        when(userMapper.entityToDomain(savedEntity)).thenReturn(savedDomain);
 
         User result = userPersistence.saveDomain(newUser);
 
@@ -102,12 +103,12 @@ class UserPersistenceTest {
 
         verify(userRepository, never()).findById(anyLong());
 
-        verify(userEntityMapper).updateEntityFromDomain(eq(newUser), any(UserEntity.class));
+        verify(userMapper).updateEntityFromDomain(eq(newUser), any(UserEntity.class));
 
         verify(roleRepository).findById(10L);
 
         verify(userRepository).save(any(UserEntity.class));
-        verify(userEntityMapper).toDomain(savedEntity);
+        verify(userMapper).entityToDomain(savedEntity);
     }
 
     @Test
@@ -121,7 +122,7 @@ class UserPersistenceTest {
         when(userRepository.findById(1L)).thenReturn(Optional.of(existingEntity));
         when(roleRepository.findById(10L)).thenReturn(Optional.of(role));
         when(userRepository.save(existingEntity)).thenReturn(savedEntity);
-        when(userEntityMapper.toDomain(savedEntity)).thenReturn(domain);
+        when(userMapper.entityToDomain(savedEntity)).thenReturn(domain);
 
         User result = userPersistence.saveDomain(domain);
 
@@ -129,11 +130,11 @@ class UserPersistenceTest {
         assertEquals(1L, result.getId());
 
         verify(userRepository).findById(1L);
-        verify(userEntityMapper).updateEntityFromDomain(domain, existingEntity);
+        verify(userMapper).updateEntityFromDomain(domain, existingEntity);
         verify(roleRepository).findById(10L);
 
         verify(userRepository).save(existingEntity);
-        verify(userEntityMapper).toDomain(savedEntity);
+        verify(userMapper).entityToDomain(savedEntity);
     }
 
     @Test
@@ -141,17 +142,17 @@ class UserPersistenceTest {
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
         when(roleRepository.findById(10L)).thenReturn(Optional.of(role));
         when(userRepository.save(any(UserEntity.class))).thenAnswer(inv -> inv.getArgument(0));
-        when(userEntityMapper.toDomain(any(UserEntity.class))).thenReturn(domain);
+        when(userMapper.entityToDomain(any(UserEntity.class))).thenReturn(domain);
 
         User result = userPersistence.saveDomain(domain);
 
         assertNotNull(result);
 
         verify(userRepository).findById(1L);
-        verify(userEntityMapper).updateEntityFromDomain(eq(domain), any(UserEntity.class));
+        verify(userMapper).updateEntityFromDomain(eq(domain), any(UserEntity.class));
         verify(roleRepository).findById(10L);
         verify(userRepository).save(any(UserEntity.class));
-        verify(userEntityMapper).toDomain(any(UserEntity.class));
+        verify(userMapper).entityToDomain(any(UserEntity.class));
     }
 
     @Test
@@ -163,10 +164,10 @@ class UserPersistenceTest {
         assertTrue(ex.getMessage().contains("Perfil não encontrado com o ID: 10"));
 
         verify(userRepository).findById(1L);
-        verify(userEntityMapper).updateEntityFromDomain(domain, entity);
+        verify(userMapper).updateEntityFromDomain(domain, entity);
         verify(roleRepository).findById(10L);
 
         verify(userRepository, never()).save(any());
-        verify(userEntityMapper, never()).toDomain(any());
+        verify(userMapper, never()).entityToDomain(any());
     }
 }
