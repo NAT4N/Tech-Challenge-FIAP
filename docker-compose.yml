@@ -1,17 +1,17 @@
 version: "3.9"
 
 services:
-  #app:
-  #  build:
-  #    context: .
-  #    dockerfile: Dockerfile
-  #  restart: always
-  #  depends_on:
-  #    - postgres
-  #  ports:
-  #    - "8080:8080"
-  #  networks:
-  #    - backend
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
 
   postgres:
     image: postgres:16

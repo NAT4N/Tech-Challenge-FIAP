@@ -7,7 +7,6 @@ import com.fiap.techchallenge14.infrastructure.entity.UserEntity;
 import com.fiap.techchallenge14.infrastructure.exception.RestaurantException;
 import com.fiap.techchallenge14.infrastructure.mapper.RestaurantMapper;
 import com.fiap.techchallenge14.infrastructure.repository.RestaurantRepository;
-import com.fiap.techchallenge14.infrastructure.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,8 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class UpdateRestaurantUseCase {
 
     private final RestaurantRepository restaurantRepository;
-    private final UserRepository userRepository;
     private final RestaurantMapper restaurantMapper;
+    private final RestaurantOwnerValidator restaurantOwnerValidator;
 
     @Transactional
     public RestaurantResponseDTO execute(Long id, RestaurantUpdateRequestDTO dto) {
@@ -31,9 +30,7 @@ public class UpdateRestaurantUseCase {
         restaurantMapper.updateDomainFromDto(dto, restaurantEntity);
 
         if (dto.ownerId() != null) {
-            UserEntity owner = userRepository.findById(dto.ownerId())
-                    .orElseThrow(() -> new RestaurantException("Proprietário não encontrado com o ID: " + dto.ownerId()));
-
+            UserEntity owner = restaurantOwnerValidator.loadRestaurantOwnerOrThrow(dto.ownerId());
             restaurantEntity.setOwner(owner);
         }
 
