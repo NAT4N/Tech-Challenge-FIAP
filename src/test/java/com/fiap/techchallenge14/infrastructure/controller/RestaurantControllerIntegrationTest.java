@@ -45,7 +45,7 @@ class RestaurantControllerIntegrationTest {
                 "123456",
                 "Rua das Flores, 123",
                 "joao.silva",
-                1L
+                2L
         );
 
         String responseUser = mockMvc.perform(post("/v1/users")
