@@ -729,7 +729,34 @@
           "response": []
         },
         {
-          "name": "3 - Busca todos os restaurantes",
+          "name": "3 - Deleta restaurante",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/v1/restaurants/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "v1",
+                "restaurants",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4 - Busca todos os restaurantes",
           "event": [
             {
               "listen": "test",
@@ -768,7 +795,7 @@
           "response": []
         },
         {
-          "name": "4 - Busca restaurante por ID",
+          "name": "5 - Busca restaurante por ID",
           "event": [
             {
               "listen": "test",
@@ -784,33 +811,6 @@
           ],
           "request": {
             "method": "GET",
-            "header": [
-              {
-                "key": "Authorization",
-                "value": "{{authToken}}",
-                "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "http://localhost:8080/v1/restaurants/1",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "8080",
-              "path": [
-                "v1",
-                "restaurants",
-                "1"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "3 - Deleta restaurante",
-          "request": {
-            "method": "DELETE",
             "header": [
               {
                 "key": "Authorization",
@@ -1037,6 +1037,216 @@
                 "v1",
                 "roles",
                 "2"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "5 - Item do cardápio do restaurante",
+      "item": [
+        {
+          "name": "1 - Cria item do cardápio",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{authToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Hambúrguer Artesanal\",\n  \"description\": \"Hambúrguer artesanal com pão brioche, carne 180g, queijo cheddar e molho especial da casa\",\n  \"price\": 39.90,\n  \"availableOnlyInRestaurant\": false,\n  \"photoPath\": \"https://meusite.com/imagens/hamburguer-artesanal.jpg\",\n  \"restaurantId\": 1\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/v1/menu-items",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "v1",
+                "menu-items"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2 - Atualiza item do cardápio",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{authToken}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Hambúrguer Artesanal Duplo\",\n  \"description\": \"Hambúrguer artesanal com pão brioche, dois blends de carne 180g, queijo cheddar duplo e molho especial da casa\",\n  \"price\": 49.90,\n  \"availableOnlyInRestaurant\": false,\n  \"photoPath\": \"https://meusite.com/imagens/hamburguer-artesanal-duplo.jpg\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/v1/menu-items/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "v1",
+                "menu-items",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3 - Deleta item do cardápio",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/v1/menu-items/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "v1",
+                "menu-items",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4 - Busca todos os itens do cardápio de um restaurante",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/v1/menu-items/restaurant/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "v1",
+                "menu-items",
+                "restaurant",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5 - Busca item do cardápio por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "{{authToken}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8080/v1/menu-items/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "v1",
+                "menu-items",
+                "1"
               ]
             }
           },
