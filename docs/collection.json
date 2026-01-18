@@ -713,7 +713,7 @@
               }
             },
             "url": {
-              "raw": "http://localhost:8080/v1/restaurants/2",
+              "raw": "http://localhost:8080/v1/restaurants/1",
               "protocol": "http",
               "host": [
                 "localhost"
