@@ -29,6 +29,9 @@ A collection contém todas as rotas da aplicação, organizadas nas seguintes se
 | 🔍 **Recupera usuários** | Busca por nome ou listagem geral |
 | 🗑️ **Deleta usuário** | Remoção de usuário              |
 | 🔐 **Atualização de senha** | Alteração de senha     |
+| 🍽️ **Restaurantes** | Gerenciamento de restaurantes |
+| 🍔 **Itens do Menu** | Gerenciamento de itens do cardápio |
+| 🛡️ **Perfis (Roles)** | Gerenciamento de perfis de acesso |
 
 ---
 
@@ -247,6 +250,160 @@ curl -X PATCH http://localhost:8080/v1/users/1/password   -H "Authorization: <to
 {
   "newPassword": "A nova senha é obrigatória"
 }
+```
+
+---
+
+## 🍽️ Restaurantes
+
+### ✅ Criar Restaurante — `POST /v1/restaurants`
+
+```bash
+curl -X POST http://localhost:8080/v1/restaurants \
+  -H "Authorization: <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Restaurante Exemplo",
+    "address": "Rua das Flores, 123",
+    "cuisineType": "Italiana",
+    "openingHours": "18:00 - 23:00",
+    "ownerId": 1
+  }'
+```
+
+### ✅ Listar Restaurantes — `GET /v1/restaurants`
+
+```bash
+curl -X GET http://localhost:8080/v1/restaurants \
+  -H "Authorization: <token>"
+```
+
+### ✅ Buscar Restaurante por ID — `GET /v1/restaurants/{id}`
+
+```bash
+curl -X GET http://localhost:8080/v1/restaurants/1 \
+  -H "Authorization: <token>"
+```
+
+### ✅ Atualizar Restaurante — `PATCH /v1/restaurants/{id}`
+
+```bash
+curl -X PATCH http://localhost:8080/v1/restaurants/1 \
+  -H "Authorization: <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Restaurante Atualizado",
+    "address": "Nova Rua, 456",
+    "cuisineType": "Brasileira",
+    "openingHours": "11:00 - 22:00"
+  }'
+```
+
+### ✅ Deletar Restaurante — `DELETE /v1/restaurants/{id}`
+
+```bash
+curl -X DELETE http://localhost:8080/v1/restaurants/1 \
+  -H "Authorization: <token>"
+```
+
+---
+
+## 🍔 Itens do Menu
+
+### ✅ Criar Item do Menu — `POST /v1/menu-items`
+
+```bash
+curl -X POST http://localhost:8080/v1/menu-items \
+  -H "Authorization: <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Pizza Margherita",
+    "description": "Molho de tomate, mussarela e manjericão",
+    "price": 45.00,
+    "restaurantId": 1,
+    "availableOnlyInRestaurant": false
+  }'
+```
+
+### ✅ Listar Itens por Restaurante — `GET /v1/menu-items/restaurant/{restaurantId}`
+
+```bash
+curl -X GET http://localhost:8080/v1/menu-items/restaurant/1 \
+  -H "Authorization: <token>"
+```
+
+### ✅ Buscar Item por ID — `GET /v1/menu-items/{id}`
+
+```bash
+curl -X GET http://localhost:8080/v1/menu-items/1 \
+  -H "Authorization: <token>"
+```
+
+### ✅ Atualizar Item do Menu — `PATCH /v1/menu-items/{id}`
+
+```bash
+curl -X PATCH http://localhost:8080/v1/menu-items/1 \
+  -H "Authorization: <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Pizza Calabresa",
+    "price": 50.00,
+    "description": "Calabresa acebolada"
+  }'
+```
+
+### ✅ Deletar Item do Menu — `DELETE /v1/menu-items/{id}`
+
+```bash
+curl -X DELETE http://localhost:8080/v1/menu-items/1 \
+  -H "Authorization: <token>"
+```
+
+---
+
+## 🛡️ Perfis (Roles)
+
+### ✅ Criar Perfil — `POST /v1/roles`
+
+```bash
+curl -X POST http://localhost:8080/v1/roles \
+  -H "Authorization: <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "ADMIN"
+  }'
+```
+
+### ✅ Listar Perfis — `GET /v1/roles`
+
+```bash
+curl -X GET http://localhost:8080/v1/roles \
+  -H "Authorization: <token>"
+```
+
+### ✅ Buscar Perfil por ID — `GET /v1/roles/{id}`
+
+```bash
+curl -X GET http://localhost:8080/v1/roles/1 \
+  -H "Authorization: <token>"
+```
+
+### ✅ Atualizar Perfil — `PATCH /v1/roles/{id}`
+
+```bash
+curl -X PATCH http://localhost:8080/v1/roles/1 \
+  -H "Authorization: <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "SUPER_ADMIN"
+  }'
+```
+
+### ✅ Deletar Perfil — `DELETE /v1/roles/{id}`
+
+```bash
+curl -X DELETE http://localhost:8080/v1/roles/1 \
+  -H "Authorization: <token>"
 ```
 
 ---
